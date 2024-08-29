@@ -1,7 +1,25 @@
 $fondo_input: #CFD9DD;
 $fondo_btn: #81AE64;
 $fondo_blanco: white;
+$color_menu: #EFFFE4;
 
+/*Diseño del body
+body{
+  margin:0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+}*/
+
+/*Se define el tamaño de la app en la sección de app*/
+/*#app{
+  width: 340px;
+  height: 440px;
+  margin:0 auto;
+  border:1px solid black;
+  overflow: hidden;
+}*/
 
 /* Diseño del boton */
 .login-btn {
