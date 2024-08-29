@@ -1,7 +1,11 @@
 $fondo_input: #CFD9DD;
 $fondo_btn: #81AE64;
 $fondo_blanco: white;
+<<<<<<< HEAD
 $color_menu: #EFFFE4;
+=======
+$fondo_negro: black;
+>>>>>>> b191ab051c55f1932417be2d82811cf7f1373f8f
 
 /*Diseño del body
 body{
@@ -28,7 +32,7 @@ body{
     align-items: center;
     width: 172px;
     height: 47px;
-    margin-left: 94px;
+    margin-left: 75px;
     margin-right: 87px;
     margin-top: 17px;
     margin-bottom: 11px;
@@ -53,6 +57,25 @@ body{
     width: 353px;
     height: 640px;
   }
+
+.btn-volver{
+    width: 50px;              
+    height: 50px;             
+    background-color: $fondo_negro;  
+    border-radius: 50%;       
+    display: flex;            
+    justify-content: center;  
+    align-items: center;      
+    cursor: pointer;          
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.flecha {
+    color: $fondo_blanco;             
+    font-size: 24px;              
+    font-weight: bold;
+    margin-right: 10px;  
+}
 
 
 
