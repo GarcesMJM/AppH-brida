@@ -1,12 +1,9 @@
 #home{
-    display: flex;
-    justify-content: space-around;
-    
-    
+    flex: 1; 
 }
 
 .sidebar {
-    width: 60px;
+    width: 50px;
     background-color: $color_menu;
     height: 100vh;
     display: flex;
@@ -26,6 +23,7 @@
 }
 
 .sidebar ul {
+    flex: 1;
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -38,19 +36,68 @@
     margin-bottom: 20px;
 }
 
-.sidebar ul li a {
-    color: #000;
-    text-decoration: none;
-    font-size: 24px;
+.sidebar .cerrar{
+    margin-top: 10%;
     display: block;
-    padding: 10px 0;
 }
 
-.sidebar ul li a:hover {
-    background-color: #b4c9a3;
+#sidebar-menu{
+    position: absolute;
+    width: 250px; 
+    height: 100vh;
+    background: $color_menu;
+    padding: 20px;
+    flex-direction: column;
+    z-index: 999;
 }
+
+#sidebar-menu .profile {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#sidebar-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#sidebar-menu ul ul {
+    display: none;
+    padding-left: 0;
+}
+
+#sidebar-menu ul li {
+    margin: 10px 0;
+}
+
+#sidebar-menu ul li a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+#sidebar-menu ul li a:hover {
+    background:  #b4c9a3;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#sidebar-menu ul li a i {
+    margin-right: 10px;
+}
+
+#sidebar-menu ul li a.out {
+    color: red;
+}
+
+.hidden {
+    display: none;
+}
+
 
 .content {
+    position: relative;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -78,7 +125,7 @@
 /* Contenedor del carrusel */
 .carousel {
     position: relative;
-    width: 50%;
+    width: 80%;
     max-width: 600px;
     border-radius: 10%;
     margin: 0 auto;
@@ -130,4 +177,8 @@
 /* Ajustes para ocultar las flechas inicialmente */
 .prev, .next {
     visibility: hidden;
+}
+
+.ocultar {
+    display: none;
 }
