@@ -3,7 +3,9 @@ let btns = [];
 
 window.onload = init;
 
+
 function init(){
+
     let currentIndex = 0;
     const images = document.querySelectorAll('.carousel-images img');
     const totalImages = images.length;
@@ -14,10 +16,10 @@ function init(){
         document.querySelector('.carousel-images').style.transform = `translateX(${offset}px)`;
     }
 
-    function moveCarousel(direction) {
+    window.moveCarousel = function(direction) {
         currentIndex = (currentIndex + direction + totalImages) % totalImages;
         updateCarousel();
-    }
+    };
 
     function autoMoveCarousel() {
         moveCarousel(1);
@@ -37,10 +39,16 @@ function init(){
 
     // Actualiza el carrusel al cambiar el tamaño de la ventana para mantener el comportamiento responsivo
     window.addEventListener('resize', updateCarousel);
-
-    desplegarMenu();
+    
     navegar();
+    desplegarMenu();
+
+    setTimeout(()=>{
+        cargarSeccion("login");
+    }, 3000);
+    
 }
+
 
 function desplegarMenu() {
     var menuToggle = document.getElementById('menu-toggle');
@@ -78,7 +86,6 @@ function navegar(){
     asignarEventosMenu();
     asignarVolver();
 
-
 }
 
 function asignarVolver(){
@@ -92,8 +99,8 @@ function asignarVolver(){
 
 function asignarEventosMenu()
 {
-    btns["btn_forget"].addEventListener("click", cambiarSeccion);
-    btns["btn_registro"].addEventListener("click", cambiarSeccion);
+    btns["btn_forgetpw"].addEventListener("click", cambiarSeccion);
+    btns["btn_register"].addEventListener("click", cambiarSeccion);
     btns["btn_login"].addEventListener("click", cambiarSeccion);
 }
 
