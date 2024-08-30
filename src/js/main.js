@@ -1,3 +1,6 @@
+let refs = [];
+let btns = [];
+
 window.onload = init;
 
 function init(){
@@ -36,6 +39,7 @@ function init(){
     window.addEventListener('resize', updateCarousel);
 
     desplegarMenu();
+    navegar();
 }
 
 function desplegarMenu() {
@@ -59,5 +63,54 @@ function desplegarMenu() {
     });
 }
 
+function navegar(){
+    refs["splash"] = document.getElementById("splash");
+    refs["home"] = document.getElementById("home");
+    refs["login"] = document.getElementById("login");
+    refs["register"] = document.getElementById("register");
+    refs["forgetpwd"] = document.getElementById("forgetpwd");
+    refs["perfil"] = document.getElementById("perfil");
+
+    btns["btn_forget"] = document.getElementById("btn_forget");
+    btns["btn_registro"] = document.getElementById("btn_registro");
+    btns["btn_login"] = document.getElementById("btn_login");
+
+    asignarEventosMenu();
+    asignarVolver();
 
 
+}
+
+function asignarVolver(){
+    let btns_volver = document.querySelectorAll(".btn-volver");
+    for (let i = 0; i < btns_volver.length; i++) {
+        btns_volver[i].addEventListener("click", ()=>{
+            cargarSeccion("login");
+        });
+    }
+}
+
+function asignarEventosMenu()
+{
+    btns["btn_forget"].addEventListener("click", cambiarSeccion);
+    btns["btn_registro"].addEventListener("click", cambiarSeccion);
+    btns["btn_login"].addEventListener("click", cambiarSeccion);
+}
+
+function cambiarSeccion(e){ 
+    let seccion = e.target.id.split("_")[1];
+    cargarSeccion(seccion);
+}
+
+function cargarSeccion(seccion){
+    ocultar();
+    refs[seccion].classList.remove("ocultar");
+    refs[seccion].classList.add("animate__animated", "animate__fadeIn");
+}
+
+function ocultar()
+{
+    for (let key in refs) {
+        refs[key].classList.add("ocultar");
+    }
+}
