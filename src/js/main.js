@@ -76,6 +76,7 @@ function navegar() {
     btns["btn_forgetpw"] = document.getElementById("btn_forgetpw");
     btns["btn_register"] = document.getElementById("btn_register");
     btns["btn_login"] = document.getElementById("btn_login");
+    btns["btn_home"] = document.getElementById("btn_home");
 
     asignarEventosMenu();
     asignarVolver();
@@ -101,6 +102,9 @@ function asignarEventosMenu() {
     }
     if (btns["btn_login"]) {
         btns["btn_login"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_home"]) {
+        btns["btn_home"].addEventListener("click", cambiarSeccion);
     }
 }
 
