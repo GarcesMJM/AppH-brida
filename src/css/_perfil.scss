@@ -1,0 +1,16 @@
+
+
+#perfil {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-perfil {
+    width: 100%;
+    border: none; 
+    border-bottom: 1px solid $fondo_btn; 
+    padding: 8px 0; 
+    outline: none;
+}
+
