@@ -34,5 +34,30 @@ function init(){
 
     // Actualiza el carrusel al cambiar el tamaño de la ventana para mantener el comportamiento responsivo
     window.addEventListener('resize', updateCarousel);
+
+    desplegarMenu();
 }
+
+function desplegarMenu() {
+    var menuToggle = document.getElementById('menu-toggle');
+    var sidebarMenu = document.getElementById('sidebar-menu');
+
+    menuToggle.addEventListener('click', function() {
+        if (sidebarMenu.classList.contains('hidden')) {
+            sidebarMenu.classList.remove('hidden');
+            menuToggle.classList.remove('sidebar');
+            menuToggle.classList.add('hidden');
+        }
+    });
+
+    sidebarMenu.addEventListener('click', function(){
+        if(menuToggle.classList.contains('hidden')){
+            sidebarMenu.classList.add('hidden');
+            menuToggle.classList.remove('hidden');
+            menuToggle.classList.add('sidebar');
+        }
+    });
+}
+
+
 

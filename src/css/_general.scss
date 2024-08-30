@@ -4,23 +4,23 @@ $fondo_blanco: white;
 $color_menu: #EFFFE4;
 $fondo_negro: black;
 
-/*Diseño del body
+/*Diseño del body*/
 body{
   margin:0;
   padding: 0;
   display: flex;
   align-items: center;
   height: 100vh;
-}*/
+}
 
 /*Se define el tamaño de la app en la sección de app*/
-/*#app{
-  width: 340px;
-  height: 440px;
+#app{
+  width: 720px;
+  height: 1600px;
   margin:0 auto;
-  border:1px solid black;
-  overflow: hidden;
-}*/
+  //border:1px solid black;
+ // overflow: hidden;
+}
 
 /* Diseño del boton */
 .login-btn {
