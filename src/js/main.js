@@ -1,14 +1,34 @@
-let refs = [];
-let btns = [];
+let refs = {};
+let btns = {};
 
 window.onload = init;
 
+function init() {
+    // Inicializar el carrusel
+    initCarousel();
 
-function init(){
+    // Configurar la navegación entre secciones
+    navegar();
 
+    // Configurar el menú desplegable
+    desplegarMenu();
+
+    // Cargar la sección "login" después de 3 segundos
+    setTimeout(() => {
+        cargarSeccion("login");
+    }, 3000);
+}
+
+// Función para inicializar el carrusel
+function initCarousel() {
     let currentIndex = 0;
     const images = document.querySelectorAll('.carousel-images img');
     const totalImages = images.length;
+
+    if (totalImages === 0) {
+        console.error("No se encontraron imágenes en el carrusel.");
+        return;
+    }
 
     function updateCarousel() {
         const carouselWidth = document.querySelector('.carousel').offsetWidth;
@@ -39,85 +59,93 @@ function init(){
 
     // Actualiza el carrusel al cambiar el tamaño de la ventana para mantener el comportamiento responsivo
     window.addEventListener('resize', updateCarousel);
-    
-    navegar();
-    desplegarMenu();
 
-    setTimeout(()=>{
-        cargarSeccion("login");
-    }, 3000);
-    
+    // Inicia el carrusel
+    updateCarousel();
 }
 
-
-function desplegarMenu() {
-    var menuToggle = document.getElementById('menu-toggle');
-    var sidebarMenu = document.getElementById('sidebar-menu');
-
-    menuToggle.addEventListener('click', function() {
-        if (sidebarMenu.classList.contains('hidden')) {
-            sidebarMenu.classList.remove('hidden');
-            menuToggle.classList.remove('sidebar');
-            menuToggle.classList.add('hidden');
-        }
-    });
-
-    sidebarMenu.addEventListener('click', function(){
-        if(menuToggle.classList.contains('hidden')){
-            sidebarMenu.classList.add('hidden');
-            menuToggle.classList.remove('hidden');
-            menuToggle.classList.add('sidebar');
-        }
-    });
-}
-
-function navegar(){
+// Función para configurar la navegación entre secciones
+function navegar() {
     refs["splash"] = document.getElementById("splash");
     refs["home"] = document.getElementById("home");
     refs["login"] = document.getElementById("login");
     refs["register"] = document.getElementById("register");
-    refs["forgetpwd"] = document.getElementById("forgetpwd");
+    refs["forgetpw"] = document.getElementById("forgetpw");
     refs["perfil"] = document.getElementById("perfil");
 
-    btns["btn_forget"] = document.getElementById("btn_forget");
-    btns["btn_registro"] = document.getElementById("btn_registro");
+    btns["btn_forgetpw"] = document.getElementById("btn_forgetpw");
+    btns["btn_register"] = document.getElementById("btn_register");
     btns["btn_login"] = document.getElementById("btn_login");
 
     asignarEventosMenu();
     asignarVolver();
-
 }
 
-function asignarVolver(){
+// Función para asignar el evento "click" a los botones de volver
+function asignarVolver() {
     let btns_volver = document.querySelectorAll(".btn-volver");
-    for (let i = 0; i < btns_volver.length; i++) {
-        btns_volver[i].addEventListener("click", ()=>{
+    btns_volver.forEach((btn) => {
+        btn.addEventListener("click", () => {
             cargarSeccion("login");
         });
+    });
+}
+
+// Función para asignar eventos a los botones del menú
+function asignarEventosMenu() {
+    if (btns["btn_forgetpw"]) {
+        btns["btn_forgetpw"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_register"]) {
+        btns["btn_register"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_login"]) {
+        btns["btn_login"].addEventListener("click", cambiarSeccion);
     }
 }
 
-function asignarEventosMenu()
-{
-    btns["btn_forgetpw"].addEventListener("click", cambiarSeccion);
-    btns["btn_register"].addEventListener("click", cambiarSeccion);
-    btns["btn_login"].addEventListener("click", cambiarSeccion);
-}
-
-function cambiarSeccion(e){ 
+// Función para cambiar de sección
+function cambiarSeccion(e) {
     let seccion = e.target.id.split("_")[1];
     cargarSeccion(seccion);
 }
 
-function cargarSeccion(seccion){
+// Función para cargar una sección específica
+function cargarSeccion(seccion) {
     ocultar();
-    refs[seccion].classList.remove("ocultar");
-    refs[seccion].classList.add("animate__animated", "animate__fadeIn");
+    if (refs[seccion]) {
+        refs[seccion].classList.remove("ocultar");
+        refs[seccion].classList.add("animate__animated", "animate__fadeIn");
+    } else {
+        console.error("No se encontró la sección:", seccion);
+    }
 }
 
-function ocultar()
-{
+// Función para ocultar todas las secciones
+function ocultar() {
     for (let key in refs) {
-        refs[key].classList.add("ocultar");
+        if (refs[key]) {
+            refs[key].classList.add("ocultar");
+        }
+    }
+}
+
+// Función para desplegar el menú
+function desplegarMenu() {
+    var menuToggle = document.getElementById('menu-toggle');
+    var sidebarMenu = document.getElementById('sidebar-menu');
+
+    if (menuToggle && sidebarMenu) {
+        menuToggle.addEventListener('click', function() {
+            sidebarMenu.classList.toggle('hidden');
+            menuToggle.classList.toggle('hidden');
+        });
+
+        sidebarMenu.addEventListener('click', function() {
+            sidebarMenu.classList.add('hidden');
+            menuToggle.classList.remove('hidden');
+        });
+    } else {
+        console.error("No se encontraron los elementos #menu-toggle o #sidebar-menu");
     }
 }

@@ -1,5 +1,4 @@
 #home{
-    display: flex;
     flex: 1; 
 }
 
@@ -178,4 +177,8 @@
 /* Ajustes para ocultar las flechas inicialmente */
 .prev, .next {
     visibility: hidden;
+}
+
+.ocultar {
+    display: none;
 }
