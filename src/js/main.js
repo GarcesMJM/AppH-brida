@@ -13,6 +13,8 @@ function init() {
     // Configurar el menú desplegable
     desplegarMenu();
 
+    eliminarPlaceholder();
+
     // Cargar la sección "login" después de 3 segundos
     setTimeout(() => {
         cargarSeccion("login");
@@ -152,4 +154,23 @@ function desplegarMenu() {
     } else {
         console.error("No se encontraron los elementos #menu-toggle o #sidebar-menu");
     }
+}
+
+function eliminarPlaceholder(){
+    // Selecciona todos los campos de texto
+const inputs = document.querySelectorAll('.input');
+
+// Añade un event listener para cuando el campo de texto recibe el foco (focus)
+inputs.forEach(input => {
+    input.addEventListener('focus', function() {
+        this.dataset.placeholder = this.placeholder;
+        this.placeholder = '';
+    });
+
+    // Restaura el placeholder cuando el usuario sale del campo de texto (blur)
+    input.addEventListener('blur', function() {
+        this.placeholder = this.dataset.placeholder;
+    });
+});
+
 }

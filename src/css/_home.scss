@@ -1,7 +1,6 @@
-#home{
-    flex: 1; 
+.home{
+    display: flex;
 }
-
 .sidebar {
     width: 50px;
     background-color: $color_menu;
