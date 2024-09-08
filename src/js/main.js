@@ -174,3 +174,103 @@ inputs.forEach(input => {
 });
 
 }
+
+function initCalendar() {
+    const calendarDays = document.getElementById('calendar-days');
+    const dateTitle = document.getElementById('dateTitle');
+    const eventList = document.getElementById('eventList');
+    const monthYearDisplay = document.getElementById('monthYearDisplay');
+    const prevMonthBtn = document.getElementById('prevMonth');
+    const nextMonthBtn = document.getElementById('nextMonth');
+
+    if (!calendarDays || !dateTitle || !eventList || !monthYearDisplay || !prevMonthBtn || !nextMonthBtn) {
+        console.error('Uno o más elementos del DOM no se encontraron');
+        return;
+    }
+
+    let currentDate = new Date();
+    let displayedMonth = currentDate.getMonth();
+    let displayedYear = currentDate.getFullYear();
+
+    function updateDateTitle(date) {
+        const options = { day: 'numeric', month: 'short', year: 'numeric' };
+        dateTitle.textContent = date.toLocaleDateString('es-ES', options);
+    }
+
+    function updateMonthYearDisplay() {
+        const options = { month: 'long', year: 'numeric' };
+        monthYearDisplay.textContent = new Date(displayedYear, displayedMonth).toLocaleDateString('es-ES', options);
+    }
+
+    function generateCalendar(year, month) {
+        calendarDays.innerHTML = '';
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        for (let i = 0; i < (firstDay + 6) % 7; i++) {
+            calendarDays.appendChild(document.createElement('div'));
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayElement = document.createElement('div');
+            dayElement.textContent = day;
+            dayElement.classList.add('day');
+            if (day === currentDate.getDate() && month === currentDate.getMonth() && year === currentDate.getFullYear()) {
+                dayElement.classList.add('selected');
+            }
+            dayElement.addEventListener('click', () => {
+                currentDate = new Date(year, month, day);
+                updateDateTitle(currentDate);
+                generateCalendar(year, month);
+                updateEventList(currentDate);
+            });
+            calendarDays.appendChild(dayElement);
+        }
+        updateMonthYearDisplay();
+    }
+
+    function updateEventList(date) {
+        eventList.innerHTML = '';
+        if (date.getDate() === 13 && date.getMonth() === 8 && date.getFullYear() === 2022) {
+            const event = document.createElement('div');
+            event.className = 'event';
+            event.innerHTML = `
+                <div class="event-icon">👤</div>
+                <div class="event-info">
+                    <div>Sr. Juan</div>
+                    <div>${date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+                    <div>10:00 AM</div>
+                </div>
+            `;
+            eventList.appendChild(event);
+        }
+    }
+
+    prevMonthBtn.addEventListener('click', () => {
+        displayedMonth--;
+        if (displayedMonth < 0) {
+            displayedMonth = 11;
+            displayedYear--;
+        }
+        generateCalendar(displayedYear, displayedMonth);
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        displayedMonth++;
+        if (displayedMonth > 11) {
+            displayedMonth = 0;
+            displayedYear++;
+        }
+        generateCalendar(displayedYear, displayedMonth);
+    });
+
+    updateDateTitle(currentDate);
+    generateCalendar(displayedYear, displayedMonth);
+    updateEventList(currentDate);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCalendar);
+} else {
+    initCalendar();
+}
