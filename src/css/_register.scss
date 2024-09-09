@@ -3,10 +3,15 @@
     align-items: center;
 }
 #register h2{
-    margin-right: 45px;
+    margin-right: 20px;
 }
 
 #register label {
     font-family: $tipo_letra;
+    margin-left: 20px;
+}
+
+#register input {
+    margin-left: 20px;
 }
 
