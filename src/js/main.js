@@ -422,15 +422,16 @@ function RegistroUser() {
         return;
     }
 
-    const Usuario = {
+    const Usuario = [{
         user: user,
         last_name: last_name,
         email: email,
         password: pwd
 
-    };
+    }];
 
     localStorage.setItem('usuario_' + email, JSON.stringify(Usuario));
+    console.log(localStorage.getItem("usuario_samuel@gmail.com"));
     alert("Registro Exitoso");
 
 } 
