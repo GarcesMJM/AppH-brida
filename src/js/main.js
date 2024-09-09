@@ -74,11 +74,16 @@ function navegar() {
     refs["register"] = document.getElementById("register");
     refs["forgetpw"] = document.getElementById("forgetpw");
     refs["perfil"] = document.getElementById("perfil");
+    refs["reservas"] = document.getElementById("reservas");
+    refs["agregar-reserva"] = document.getElementById("agregar-reserva");
 
     btns["btn_forgetpw"] = document.getElementById("btn_forgetpw");
     btns["btn_register"] = document.getElementById("btn_register");
     btns["btn_login"] = document.getElementById("btn_login");
     btns["btn_home"] = document.getElementById("btn_home");
+    btns["btn_perfil"] = document.getElementById("btn_perfil");
+    btns["btn_reservas"] = document.getElementById("btn_reservas");
+    btns["btn_agregar-reserva"] = document.getElementById("btn_agregar-reserva");
 
     asignarEventosMenu();
     asignarVolver();
@@ -107,6 +112,15 @@ function asignarEventosMenu() {
     }
     if (btns["btn_home"]) {
         btns["btn_home"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_perfil"]) {
+        btns["btn_perfil"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_reservas"]) {
+        btns["btn_reservas"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_agregar-reserva"]) {
+        btns["btn_agregar-reserva"].addEventListener("click", cambiarSeccion);
     }
 }
 
@@ -175,6 +189,7 @@ inputs.forEach(input => {
 
 }
 
+//Funcionalidad para la sección de reservas 
 function initCalendar() {
     const calendarDays = document.getElementById('calendar-days');
     const dateTitle = document.getElementById('dateTitle');
@@ -274,3 +289,117 @@ if (document.readyState === 'loading') {
 } else {
     initCalendar();
 }
+
+
+// Funcionalidad para la sección de agregar reserva
+const today = dayjs();
+        let currentMonth = today;
+        let startDate = null;
+        let endDate = null;
+        let pax = 1;
+
+        function renderCalendar() {
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+
+            const firstDay = currentMonth.startOf('month').day();
+            const daysInMonth = currentMonth.daysInMonth();
+
+            for (let i = 0; i < firstDay; i++) {
+                calendarDays.appendChild(document.createElement('div'));
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const day = document.createElement('div');
+                day.classList.add('day');
+                day.textContent = i;
+                day.onclick = () => selectDate(i);
+                const currentDate = currentMonth.date(i);
+                if (startDate && currentDate.isSame(startDate, 'day')) {
+                    day.classList.add('selected');
+                }
+                if (endDate && currentDate.isSame(endDate, 'day')) {
+                    day.classList.add('selected');
+                }
+                if (startDate && endDate && currentDate.isAfter(startDate) && currentDate.isBefore(endDate)) {
+                    day.classList.add('in-range');
+                }
+                calendarDays.appendChild(day);
+            }
+
+            updateDateRange();
+        }
+
+        function selectDate(day) {
+            const selectedDate = currentMonth.date(day);
+            if (!startDate || (startDate && endDate)) {
+                startDate = selectedDate;
+                endDate = null;
+            } else if (selectedDate.isAfter(startDate)) {
+                endDate = selectedDate;
+            } else {
+                endDate = startDate;
+                startDate = selectedDate;
+            }
+            renderCalendar();
+        }
+
+        function updateDateRange() {
+            const dateRange = document.getElementById('dateRange');
+            dateRange.innerHTML = '';
+            if (startDate) {
+                const checkIn = document.createElement('div');
+                checkIn.textContent = `Check-in: ${startDate.format('DD-MM-YYYY HH:mm')}`;
+                dateRange.appendChild(checkIn);
+            }
+            if (endDate) {
+                const checkOut = document.createElement('div');
+                checkOut.textContent = `Check-out: ${endDate.add(1, 'day').format('DD-MM-YYYY HH:mm')}`;
+                dateRange.appendChild(checkOut);
+            }
+            if (!startDate && !endDate) {
+                dateRange.textContent = 'Seleccione el numero de dias';
+            }
+        }
+
+        function changePax(delta) {
+            pax = Math.max(1, pax + delta);
+            document.getElementById('paxCount').textContent = pax;
+        }
+
+        function populateMonthYearSelects() {
+            const monthSelect = document.getElementById('monthSelect');
+            const yearSelect = document.getElementById('yearSelect');
+
+            const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            months.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            });
+
+            const currentYear = today.year();
+            for (let year = currentYear; year <= currentYear + 5; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            }
+
+            monthSelect.value = currentMonth.month();
+            yearSelect.value = currentMonth.year();
+
+            monthSelect.onchange = updateMonth;
+            yearSelect.onchange = updateMonth;
+        }
+
+        function updateMonth() {
+            const monthSelect = document.getElementById('monthSelect');
+            const yearSelect = document.getElementById('yearSelect');
+            currentMonth = dayjs().year(parseInt(yearSelect.value)).month(parseInt(monthSelect.value));
+            renderCalendar();
+        }
+
+        populateMonthYearSelects();
+        renderCalendar();

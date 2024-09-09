@@ -1,0 +1,150 @@
+.calendar-container {
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    font-family: $tipo_letra;
+}
+
+.header {
+    background-color: #f8f8f8;
+    padding: 10px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #007bff;
+}
+
+.month-year {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.month-year select {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    background-color: transparent;
+    color: #007bff;
+    font-weight: bold;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.calendar {
+    padding: 10px;
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.day {
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+}
+
+.day:hover {
+    background-color: #e0e0e0;
+}
+
+.day.selected {
+    background-color: #8bc34a;
+    color: white;
+}
+
+.day.in-range {
+    background-color: #dcedc8;
+}
+
+.reservation {
+    padding: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.date-range {
+    margin-bottom: 15px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.date-range div {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.pax {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.pax span {
+    font-size: 14px;
+    color: #333;
+}
+
+.pax-controls {
+    display: flex;
+    align-items: center;
+}
+
+.pax-controls button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: #8bc34a;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.pax-count {
+    margin: 0 10px;
+    font-size: 16px;
+}
+
+.confirm-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #8bc34a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
