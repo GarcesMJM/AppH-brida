@@ -195,6 +195,42 @@
 
         <!--Agregar reserva-->
         <section id="agregar_reserva" class="ocultar">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+<div class="calendar-container">
+    <div class="header">
+        <button class="back-button">←</button>
+        <div class="month-year">
+            <select id="monthSelect"></select>
+            <select id="yearSelect"></select>
+        </div>
+    </div>
+    <div class="calendar">
+        <div class="weekdays">
+            <div>Mo</div>
+            <div>Tu</div>
+            <div>We</div>
+            <div>Th</div>
+            <div>Fr</div>
+            <div>Sa</div>
+            <div>Su</div>
+        </div>
+        <div class="days" id="calendarDays"></div>
+    </div>
+    <div class="reservation">
+        <div class="date-range" id="dateRange">
+            <!-- Date range will be populated by JavaScript -->
+        </div>
+        <div class="pax">
+            <span>PAX:</span>
+            <div class="pax-controls">
+                <button onclick="changePax(-1)">-</button>
+                <span class="pax-count" id="paxCount">1</span>
+                <button onclick="changePax(1)">+</button>
+            </div>
+        </div>
+        <button class="confirm-button">Confirmar reserva</button>
+    </div>
+</div>
 
         </section>
     <script src="js/main.js"></script>
