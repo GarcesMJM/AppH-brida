@@ -4,14 +4,19 @@
 }
 
 #forgetpw h2 {
-    margin-left: 65px;
+    margin-left: 35px;
     margin-bottom: 100px;
 }
 
+#forgetpw label {
+    font-family: $tipo_letra;
+}
+
 #a_recovery {
-    margin-left: 155px;
+    margin-left: 110px;
 }
 
 .recovery {
     margin-bottom: 60px;
+    margin-top: 40px;
 }
