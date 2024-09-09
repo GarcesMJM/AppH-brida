@@ -21,7 +21,7 @@
                 <div class="login-container">
                 <img src="img/logo.jpg" alt="">
                 <h2>Iniciar Sesion</h2>
-                <form>
+                <form id="login-form">
                     <!--- Usuario -->
                     <div class="input-container">
                     <input type="text" class="input" name="mail" placeholder="Correo" required>
@@ -47,12 +47,17 @@
                     <a href="#" class="flecha">&larr;</a>
                 </div>
                 <h2>Registrarse</h2>
-                <form>
-                    <input type="text" class="input" name="user" placeholder="Nombre" required>
-                    <input type="text" class="input" name="last_name" placeholder="Apellidos" required>
-                    <input type="Email" class="input" name="mail" placeholder="Correo" required>
-                    <input type="password" class="input" name="pwd" placeholder="Contraseña" required>
-                    <input type="password" class="input" name="pwd" placeholder="Confirmar Contraseña" required>
+                <form id="register_form">
+                    <input type="text" class="input" name="user" id="user" placeholder="Nombre" required>
+
+                    <input type="text" class="input" name="last_name" id="last_name" placeholder="Apellidos" required>
+                    
+                    <input type="Email" class="input" name="mail" id="mail" placeholder="Correo" required>
+                    
+                    <input type="password" class="input" name="pwd" id="pwd" placeholder="Contraseña" required>
+                    
+                    <input type="password" class="input" name="pwd" id="r_pwd" placeholder="Confirmar Contraseña" required>
+                    
                     <button type="submit" class="login-btn">REGISTRARSE</button>
                     <label class="label-register">Ya tienes una cuenta?</label><a id="btn_login" href="javascript:void(0);">Iniciar Sesion</a>
                 </form>
@@ -68,7 +73,7 @@
                     <a href="#" class="flecha">&larr;</a>
                 </div>
                 <h2>Recuperar Contraseña</h2>
-                <form>
+                <form id="recovery_form">
                     <input type="Email" class="input" name="mail" placeholder="Confirmar Correo" required>
                     <a href="javascript:void(0);" id="a_recovery">Solicitar un nuevo correo</a>
                     <button type="submit" class="login-btn recovery">ENVIAR</button>
