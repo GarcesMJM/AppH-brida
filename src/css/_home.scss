@@ -2,18 +2,22 @@
     display: flex;
 }
 .sidebar {
-    width: 15vh;
+    width: 6vh;
     background-color: $color_menu;
-    height: 91vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     padding-top: 20px;
     border-radius: 1ch;
+    transition: all 1s;
+    position: fixed;
+    overflow: hidden;
 }
 
 .sidebar .profile {
+    margin-top: 1vh;
     margin-bottom: 20px;
 }
 
@@ -47,18 +51,28 @@
 }
 
 #sidebar-menu{
-    position: absolute;
+    position: fixed;
     width: 50%; 
-    height: 90vh;
+    height: 100vh;
     background: $color_menu;
     padding: 20px;
     flex-direction: column;
     z-index: 999;
     border-radius: 3ch;
     transition: all 1s;
+    overflow: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Transición suave */
+    transform: translateX(-100%); /* Esconde el menú fuera de la pantalla */
+    opacity: 0; /* Inicialmente invisible */
+}
+
+#sidebar-menu.activarmenu {
+    transform: translateX(0); /* Mueve el menú a la vista */
+    opacity: 1; /* Totalmente visible */
 }
 
 #sidebar-menu .profile {
+    margin-top: 1vh;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -105,12 +119,15 @@
     display: none;
 }
 
-
 .content {
+    transition: margin-left 0.3s ease;
     position: relative;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    margin-left: 6vh;
+
+
 }
 
 .section {
@@ -130,7 +147,7 @@
 .section h2 {
     text-align: center;
     font-size: 18px;
-    margin-top: 10px;
+    margin-top: 10vh;
     font-family: $tipo_letra_titulos;
 }
 
@@ -194,6 +211,7 @@
 .ocultar {
     display: none;
 }
+
 
 .numero{
     list-style-type: decimal;

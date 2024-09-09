@@ -156,14 +156,16 @@ function desplegarMenu() {
     var sidebarMenu = document.getElementById('sidebar-menu');
 
     if (menuToggle && sidebarMenu) {
+        // Evento de clic en el botón de menú
         menuToggle.addEventListener('click', function() {
-            sidebarMenu.classList.toggle('hidden');
-            menuToggle.classList.toggle('hidden');
+            sidebarMenu.classList.add('activarmenu');
+            menuToggle.classList.add('hidden'); // Opcional: ocultar el botón cuando el menú está activo
         });
 
+        // Si deseas cerrar el menú haciendo clic dentro de él
         sidebarMenu.addEventListener('click', function() {
-            sidebarMenu.classList.add('hidden');
-            menuToggle.classList.remove('hidden');
+            sidebarMenu.classList.remove('activarmenu');
+            menuToggle.classList.remove('hidden'); // Mostrar el botón nuevamente
         });
     } else {
         console.error("No se encontraron los elementos #menu-toggle o #sidebar-menu");
