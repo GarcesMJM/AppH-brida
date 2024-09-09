@@ -3,6 +3,8 @@ $fondo_btn: #81AE64;
 $fondo_blanco: white;
 $color_menu: #EFFFE4;
 $fondo_negro: black;
+$tipo_letra_titulos: 'Montserrat Alternates';
+$tipo_letra: 'Montserrat Alternates-Regular';
 
 /*Diseño del body*/
 body{
@@ -38,13 +40,14 @@ body{
     border-style:none;
     color:$fondo_blanco;
     font-weight:bold;
+    font-family: $tipo_letra;
+    font-weight: bold;
   }
 
 /* Diseño de los input*/
 .input-container {
     display:flex;
     flex-direction:column;
-    font-family: Inter;
     margin-left: 17px;
   }
 /* Diseño del login */ //No se si es necesario la vdd
@@ -76,6 +79,24 @@ body{
 
 .ocultar{
   display: none;
+}
+
+//TIPOS DE LETRA
+
+//Tipo de letra para los titulos
+@font-face {
+  font-family: 'Montserrat Alternates';
+  src: url('/src/fonts/Montserrat_Alternates/MontserratAlternates-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+//Tipo de letra para los demás textos
+@font-face {
+  font-family: 'Montserrat Alternates-Regular';
+  src: url('/src/fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 
