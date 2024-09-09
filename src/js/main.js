@@ -405,3 +405,33 @@ const today = dayjs();
 
         populateMonthYearSelects();
         renderCalendar();
+
+
+
+//Registro con localstorage
+function RegistroUser() {
+
+    const user = document.getElementById('user').value;
+    const last_name = document.getElementById('last_name').value;
+    const email = document.getElementById('email').value;
+    const pwd = document.getElementById('pwd').value;
+    const r_pwd = document.getElementById('r_pwd').value;
+
+    if(pwd !== r_pwd) {
+        alert("Las contraseñas deben de coincidir");
+        return;
+    }
+
+    const Usuario = {
+        user: user,
+        last_name: last_name,
+        email: email,
+        password: pwd
+
+    };
+
+    localStorage.setItem('usuario_' + email, JSON.stringify(Usuario));
+    alert("Registro Exitoso");
+
+} 
+

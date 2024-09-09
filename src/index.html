@@ -21,7 +21,7 @@
                 <div class="login-container">
                 <img src="img/logo.jpg" alt="">
                 <h2>Iniciar Sesion</h2>
-                <form>
+                <form id="login-form">
                     <!--- Usuario -->
                     <div class="input-container">
                     <input type="text" class="input" name="mail" placeholder="Correo" required>
@@ -31,7 +31,7 @@
                     <input type="password" class="input" name="pwd" placeholder="Contraseña" required>
                     </div>
                     <!--- Forget -->
-                    <label class="label-forget">Olvidaste tu contraseña?</label><a id="btn_forgetpw" href="javascript:void(0);">Recuperar contraseña</a>
+                    <label class="label-forget">Olvidaste tu contraseña?</label><a id="btn_forgetpw" href="javascript:void(0);">Recuperar</a>
                     <button type="submit" class="login-btn" id="btn_home">INICIAR</button>
                     <label class="label-login">No tienes una cuenta?</label><a id="btn_register" href="javascript:void(0);">Registrarse</a>
                   </div>
@@ -47,12 +47,17 @@
                     <a href="#" class="flecha">&larr;</a>
                 </div>
                 <h2>Registrarse</h2>
-                <form>
-                    <input type="text" class="input" name="user" placeholder="Nombre" required>
-                    <input type="text" class="input" name="last_name" placeholder="Apellidos" required>
-                    <input type="Email" class="input" name="mail" placeholder="Correo" required>
-                    <input type="password" class="input" name="pwd" placeholder="Contraseña" required>
-                    <input type="password" class="input" name="pwd" placeholder="Confirmar Contraseña" required>
+                <form id="register_form" onsubmit="RegistroUser(); return false;">
+                    <input type="text" class="input" name="user" id="user" placeholder="Nombre" required>
+
+                    <input type="text" class="input" name="last_name" id="last_name" placeholder="Apellidos" required>
+                    
+                    <input type="Email" class="input" name="mail" id="mail" placeholder="Correo" required>
+                    
+                    <input type="password" class="input" name="pwd" id="pwd" placeholder="Contraseña" required>
+                    
+                    <input type="password" class="input" name="pwd" id="r_pwd" placeholder="Confirmar Contraseña" required>
+                    
                     <button type="submit" class="login-btn">REGISTRARSE</button>
                     <label class="label-register">Ya tienes una cuenta?</label><a id="btn_login" href="javascript:void(0);">Iniciar Sesion</a>
                 </form>
@@ -68,12 +73,12 @@
                     <a href="#" class="flecha">&larr;</a>
                 </div>
                 <h2>Recuperar Contraseña</h2>
-                <form>
+                <form id="recovery_form">
                     <input type="Email" class="input" name="mail" placeholder="Confirmar Correo" required>
                     <a href="javascript:void(0);" id="a_recovery">Solicitar un nuevo correo</a>
                     <button type="submit" class="login-btn recovery">ENVIAR</button>
-                    <label>Se enviara un correo para que 
-                    puedas recuperar la contraseña</label>
+                    <p>Se enviara un correo para que 
+                    puedas recuperar la contraseña</p>
                 </form>
             </div>
 
@@ -141,75 +146,31 @@
             
                 <div class="content">
                     <div class="section">
-                       <img src="img/logo.jpg" alt="Espacios"> 
+                       <img src="#" alt="Espacios"> 
                     </div>
                     <div class="section">
                         <h2>NUESTROS ESPACIOS</h2>
                         <div class="carousel">
                             <div class="carousel-images">
-                                <img src="img/habitacion1.jpg" alt="Habitación 1">
-                                <img src="img/paisaje1.jpg" alt="Paisaje 1">
-                                <img src="img/baño.jpg" alt="Baño">
-                                <img src="img/habitacion2.jpg" alt="Habitación 2">
-                                <img src="img/paisaje2.jpg" alt="Paisaje 2">
-                                <img src="img/entrada.jpg" alt="Entrada">
-                                <img src="img/habitacion3.jpg" alt="Habitación 3">
+                                <img src="#" alt="Política 1">
+                                <img src="#" alt="Política 2">
+                                <img src="#" alt="Política 3">
+                                <!-- Añade más imágenes según necesites -->
                             </div>
                             <button class="prev" onclick="moveCarousel(-1);"><i class="bi bi-arrow-left-short"></i></button>
                             <button class="next" onclick="moveCarousel(1);"><i class="bi bi-arrow-right-short"></i></button>
                     </div>
-                    <div class="politicas">
+                    <div class="section">
                     <h2>NUESTRAS POLÍTICAS</h2>
-                    
-                        <li class="numero"> Check-in y Check-out</li>
-                        <li class="literal">Check-in: A partir de las 3:00 p.m</li>
-                        <li class="literal">Check-out: Hasta las 12:00 m</li>
-                        <li class="literal">Early check-in y late check-out sujetos a disponibilidad y cargo adicional</li>
-                        
-                        <li class="numero">Reservaciones y Cancelaciones</li>
-                        <li class="literal">Se requiere una tarjeta de crédito válida para garantizar la reserva</li>
-                        <li class="literal">Cancelación gratuita hasta 48 horas antes de la fecha de llegada</li>
-                        <li class="literal">Cancelaciones posteriores o no presentación (no-show) incurrirán en el cargo de la primera noche</li>
-                         
-                        <li class="numero">Política de Pagos</li>
-                        <li class="literal">Se acepta efectivo y tarjetas de crédito/débito principales</li>    
-                        <li class="literal">El pago total se requiere al momento del check-in</li>
-                        <li class="literal">Pueden aplicarse depósitos para incidentales</li>
-
-                        <li class="numero">Política de Niños</li>
-                        <li class="literal">Niños menores de 12 años se hospedan gratis compartiendo cama con los padres</li>
-                        <li class="literal">Cunas disponibles sin costo adicional (sujeto a disponibilidad)</li>
-
-                        <li class="numero">Política de Mascotas</li>
-                        <li class="literal">No se permiten mascotas, excepto animales de servicio certificados</li>
-
-                        <li class="numero">Política de No Fumar</li>
-                        <li class="literal">Prohibido fumar en todas las áreas interiores del hotel</li>
-                        <li class="literal">Áreas designadas para fumar disponibles en exteriores</li>
-
-                        <li class="numero">Servicios y Amenidades</li>
-                        <li class="literal">Wi-Fi gratuito en todas las áreas del hotel</li>
-                        <li class="literal">Desayuno buffet incluido en la tarifa de la habitación</li>
-                        <li class="literal">Acceso gratuito al gimnasio y piscina para huéspedes</li>
-
-                        <li class="numero">Política de Visitantes</li>
-                        <li class="literal">Visitantes permitidos en áreas comunes hasta las 22:00 horas</li>
-                        <li class="literal">Visitantes en habitaciones deben registrarse en recepción</li>
-
-                        <li class="numero">Política de Ruido y Conducta</li>
-                        <li class="literal">Se espera que los huéspedes mantengan un nivel de ruido razonable, especialmente entre las 22:00 y las 8:00 horas</li>
-                        <li class="literal">El hotel se reserva el derecho de terminar la estancia de huéspedes que causen molestias a otros</li>
-
-                        <li class="numero">Objetos Perdidos</li>
-                        <li class="literal">El hotel no se hace responsable por objetos de valor no depositados en la caja fuerte de la habitación o en recepción</li>
-                        <li class="literal">Los objetos perdidos se guardarán por un máximo de 30 días</li>              
-                </p>
+                    <p>random </p>
+                        <!-- Aquí puedes incluir el contenido de las políticas -->
+                </div>
             </div>
         </section>    
         
         <!--Reservas-->
         <section id="reservas" class="ocultar">
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+            
 <div class="container">
     <div class="header">
         <button class="back-button">←</button>
@@ -231,48 +192,14 @@
     <div class="event-list" id="eventList">
         <!-- Eventos se generarán dinámicamente aquí -->
     </div>
-<button class="add-button" id="btn_agregar-reserva">+</button>
+<button class="add-button">+</button>
 </div>
+
+
         </section>
 
         <!--Agregar reserva-->
-        <section id="agregar-reserva" class="ocultar">
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
-<div class="calendar-container">
-    <div class="header">
-        <button class="back-button">←</button>
-        <div class="month-year">
-            <select id="monthSelect"></select>
-            <select id="yearSelect"></select>
-        </div>
-    </div>
-    <div class="calendar">
-        <div class="weekdays">
-            <div>Mo</div>
-            <div>Tu</div>
-            <div>We</div>
-            <div>Th</div>
-            <div>Fr</div>
-            <div>Sa</div>
-            <div>Su</div>
-        </div>
-        <div class="days" id="calendarDays"></div>
-    </div>
-    <div class="reservation">
-        <div class="date-range" id="dateRange">
-            <!-- Date range will be populated by JavaScript -->
-        </div>
-        <div class="pax">
-            <span>PAX:</span>
-            <div class="pax-controls">
-                <button onclick="changePax(-1)">-</button>
-                <span class="pax-count" id="paxCount">1</span>
-                <button onclick="changePax(1)">+</button>
-            </div>
-        </div>
-        <button class="confirm-button">Confirmar reserva</button>
-    </div>
-</div>
+        <section id="agregar_reserva" class="ocultar">
 
         </section>
     <script src="js/main.js"></script>
