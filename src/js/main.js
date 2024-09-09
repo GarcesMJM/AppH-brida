@@ -74,11 +74,16 @@ function navegar() {
     refs["register"] = document.getElementById("register");
     refs["forgetpw"] = document.getElementById("forgetpw");
     refs["perfil"] = document.getElementById("perfil");
+    refs["reservas"] = document.getElementById("reservas");
+    refs["agregar-reserva"] = document.getElementById("agregar-reserva");
 
     btns["btn_forgetpw"] = document.getElementById("btn_forgetpw");
     btns["btn_register"] = document.getElementById("btn_register");
     btns["btn_login"] = document.getElementById("btn_login");
     btns["btn_home"] = document.getElementById("btn_home");
+    btns["btn_perfil"] = document.getElementById("btn_perfil");
+    btns["btn_reservas"] = document.getElementById("btn_reservas");
+    btns["btn_agregar-reserva"] = document.getElementById("btn_agregar-reserva");
 
     asignarEventosMenu();
     asignarVolver();
@@ -107,6 +112,15 @@ function asignarEventosMenu() {
     }
     if (btns["btn_home"]) {
         btns["btn_home"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_perfil"]) {
+        btns["btn_perfil"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_reservas"]) {
+        btns["btn_reservas"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_agregar-reserva"]) {
+        btns["btn_agregar-reserva"].addEventListener("click", cambiarSeccion);
     }
 }
 
@@ -175,6 +189,7 @@ inputs.forEach(input => {
 
 }
 
+//Funcionalidad para la sección de reservas 
 function initCalendar() {
     const calendarDays = document.getElementById('calendar-days');
     const dateTitle = document.getElementById('dateTitle');
@@ -275,6 +290,8 @@ if (document.readyState === 'loading') {
     initCalendar();
 }
 
+
+// Funcionalidad para la sección de agregar reserva
 const today = dayjs();
         let currentMonth = today;
         let startDate = null;

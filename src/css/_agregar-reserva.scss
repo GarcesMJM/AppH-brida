@@ -1,17 +1,16 @@
 .calendar-container {
-    max-width: 300px;
     margin: 0 auto;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    font-family: Arial, sans-serif;
+    font-family: $tipo_letra;
 }
 
 .header {
     background-color: #f8f8f8;
     padding: 10px;
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
 }
 
@@ -26,6 +25,7 @@
 .month-year {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .month-year select {
