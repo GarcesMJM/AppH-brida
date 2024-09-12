@@ -46,6 +46,10 @@ body{
     font-weight: bold;
   }
 
+.login-btn[type='submit']:active {
+  transform: scale(0.97);
+}  
+
 /* Diseño de los input*/
 .input-container {
     display:flex;

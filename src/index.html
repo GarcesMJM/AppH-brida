@@ -21,14 +21,14 @@
                 <div class="login-container">
                 <img src="img/logo.jpg" alt="">
                 <h2>Iniciar Sesion</h2>
-                <form id="login-form">
+                <form id="login_form">
                     <!--- Usuario -->
                     <div class="input-container">
-                    <input type="text" class="input" name="mail" placeholder="Correo" required>
+                    <input type="text" class="input" id="mail_login" name="mail" placeholder="Correo" required>
                     </div>
                     <!--- Contraseña -->
                     <div class="input-container">
-                    <input type="password" class="input" name="pwd" placeholder="Contraseña" required>
+                    <input type="password" class="input" id="pwd_login" name="pwd" placeholder="Contraseña" required>
                     </div>
                     <!--- Forget -->
                     <label class="label-forget">Olvidaste tu contraseña?</label><a id="btn_forgetpw" href="javascript:void(0);">Recuperar</a>
@@ -47,7 +47,7 @@
                     <a href="#" class="flecha">&larr;</a>
                 </div>
                 <h2>Registrarse</h2>
-                <form id="register_form" onsubmit="RegistroUser(); return false;">
+                <form id="register_form">
                     <input type="text" class="input" id="user" placeholder="Nombre" required>
 
                     <input type="text" class="input" id="last_name" placeholder="Apellidos" required>

@@ -409,30 +409,74 @@ const today = dayjs();
 
 
 //Registro con localstorage
-function RegistroUser() {
+
+const register_form = document.getElementById("register_form");
+
+register_form.addEventListener('submit', (e) => {
+    e.preventDefault()
 
     const user = document.getElementById('user').value;
     const last_name = document.getElementById('last_name').value;
-    const email = document.getElementById('email').value;
+    const mail = document.getElementById('mail').value;
     const pwd = document.getElementById('pwd').value;
     const r_pwd = document.getElementById('r_pwd').value;
 
+    const Users = JSON.parse(localStorage.getItem('users')) || []
+    const usuario_registrados = Users.find(user => user.mail === mail)
+    /*
     if(pwd !== r_pwd) {
-        alert("Las contraseñas deben de coincidir");
-        return;
+        return Swal.fire({
+            title: 'Error!',
+            text: 'Las contraseñas deben de coincidir',
+            icon: 'error',
+            confirmButtonText: 'Cool'
+          })
     }
 
-    const Usuario = [{
-        user: user,
-        last_name: last_name,
-        email: email,
-        password: pwd
+    if(usuario_registrados){
+        return Swal.fire({
+            title: 'Error!',
+            text: 'El usuario ya esta registrado',
+            icon: 'error',
+            confirmButtonText: 'Cool'
+          })
+    }
+    */
 
-    }];
+    Users.push({user: user, last_name: last_name, mail: mail, pwd:pwd,r_pwd: r_pwd})
+    localStorage.setItem('users', JSON.stringify(Users))
+    /*
+    Swal.fire({
+        title: 'exito!',
+        text: 'El registro fue exitoso',
+        icon: 'success',
+        confirmButtonText: 'Cool'
+      })
+    */
+   alert('Registro exitoso')
+   document.getElementById('register_form').reset()
+   cargarSeccion("login");
 
-    localStorage.setItem('usuario_' + email, JSON.stringify(Usuario));
-    console.log(localStorage.getItem("usuario_samuel@gmail.com"));
-    alert("Registro Exitoso");
+})
 
-} 
 
+//Logueo con localstorage
+const login_form = document.getElementById('login_form')
+login_form.addEventListener('submit', (e) =>{
+    e.preventDefault()
+
+    const mail = document.getElementById('mail_login').value;
+    const pwd = document.getElementById('pwd_login').value;
+
+    const Users = JSON.parse(localStorage.getItem('users')) || []
+    const usuario_valido = Users.find(user => user.mail === mail && user.pwd === pwd)
+    if(!usuario_valido){
+        return alert('Usuario y/o contraseña incorrecta') //Se tienen que hacer con sweet alert
+    }
+    alert('logueo exitoso') //Se tienen que hacer con sweet alert
+    localStorage.setItem('logueo_exitoso', JSON.stringify(usuario_valido))
+    document.getElementById('login').reset()
+    cargarSeccion("home");
+
+
+})
