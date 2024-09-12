@@ -1,6 +1,17 @@
+#agregagar-reserva {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
 .calendar-container {
-    margin: 0 auto;
+
     background-color: white;
+    width: 400px;
+    height: 100vh;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     font-family: $tipo_letra;
@@ -43,6 +54,7 @@
 
 .calendar {
     padding: 10px;
+
 }
 
 .weekdays {
@@ -103,6 +115,7 @@
 
 .pax {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
@@ -111,25 +124,25 @@
     padding: 10px;
 }
 
-.pax span {
-    font-size: 14px;
-    color: #333;
-}
-
-.pax-controls {
+.pax-selector {
     display: flex;
+    width: 100%;
+    justify-content: space-between;
     align-items: center;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
 }
-
-.pax-controls button {
-    width: 30px;
-    height: 30px;
+.pax-button {
+    width: 50px;
+    height: 50px;
     border: none;
     background-color: #8bc34a;
     color: white;
-    font-size: 18px;
+    font-size: 24px;
     cursor: pointer;
-    border-radius: 50%;
+    transition: background-color 0.3s;
 }
 
 .pax-count {

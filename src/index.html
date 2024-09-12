@@ -24,11 +24,11 @@
                 <form id="login-form">
                     <!--- Usuario -->
                     <div class="input-container">
-                    <input type="text" class="input" name="mail" placeholder="Correo" required>
+                    <input type="text" class="input" id="mail" name="email_login" placeholder="Correo" required>
                     </div>
                     <!--- Contraseña -->
                     <div class="input-container">
-                    <input type="password" class="input" name="pwd" placeholder="Contraseña" required>
+                    <input type="password" class="input" id="pwd" name="pwd_login" placeholder="Contraseña" required>
                     </div>
                     <!--- Forget -->
                     <label class="label-forget">Olvidaste tu contraseña?</label><a id="btn_forgetpw" href="javascript:void(0);">Recuperar</a>
@@ -74,7 +74,7 @@
                 </div>
                 <h2>Recuperar Contraseña</h2>
                 <form id="recovery_form">
-                    <input type="Email" class="input" name="mail" placeholder="Confirmar Correo" required>
+                    <input type="Email" class="input" id="email_forgetpw" name="mail" placeholder="Confirmar Correo" required>
                     <a href="javascript:void(0);" id="a_recovery">Solicitar un nuevo correo</a>
                     <button type="submit" class="login-btn recovery">ENVIAR</button>
                     <p>Se enviara un correo para que 
@@ -94,17 +94,17 @@
                 <div>
                     <img src="img/image 4.png" alt="Icono de Usuario" class="icon">
                 </div>
-                <h2>Usuario</h2>
+                <h2 id="user_name<">Usuario</h2>
                 <form>
                     <label>Nombre:</label>
-                    <input type="text" name="user" class="input-perfil" placeholder="Nombre de Usuario">
+                    <input type="text" id="user_name" name="user" class="input-perfil" placeholder="Nombre de Usuario">
                     <label>Apellido:</label>
-                    <input type="text" name="last_name" class="input-perfil" placeholder="Apellido del Usuario">
+                    <input type="text" id="user_last_name" name="last_name" class="input-perfil" placeholder="Apellido del Usuario">
                     <label>Correo Electronico</label>
-                    <input type="text" name="mail" class="input-perfil" placeholder="Correo del usuario">
+                    <input type="text" name="mail" id="user_email" class="input-perfil" placeholder="Correo del usuario">
                     <label>Deseas cambiar tu contraseña?</label>
                     <a href="#">Cambiar Contraseña</a>
-                    <button type="submit" class="btn-login">Cerrar Sesion</button>
+                    <button type="submit" class="btn_login">Cerrar Sesión</button>
                 </form>
                 
         </section>
@@ -133,7 +133,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                             <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                        </svg> <p href="#" >Nombre</p>
+                        </svg> <p href="#" id="user_home" >Nombre</p>
                     </div>
                     <ul>
                             <li><a href="#" id="btn_reservas"><i class="bi bi-calendar" ></i> Reservas</a></li>
@@ -269,11 +269,11 @@
             <!-- Date range will be populated by JavaScript -->
         </div>
         <div class="pax">
-            <span>PAX:</span>
-            <div class="pax-controls">
-                <button onclick="changePax(-1)">-</button>
+            <div class="pax-label">PAX:</div>
+        <div class="pax-selector">
+                <button class="pax-button" onclick="changePax(-1)">-</button>
                 <span class="pax-count" id="paxCount">1</span>
-                <button onclick="changePax(1)">+</button>
+                <button class="pax-button" onclick="changePax(1)">+</button>
             </div>
         </div>
         <button class="confirm-button">Confirmar reserva</button>
