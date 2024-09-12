@@ -88,6 +88,15 @@ body{
   display: none;
 }
 
+//Diseño de los sweet alert
+.swal2-title {
+  font-family: $tipo_letra_titulos;
+}
+
+.swal2-html-container {
+  font-family: $tipo_letra;
+}
+
 //TIPOS DE LETRA
 
 //Tipo de letra para los titulos

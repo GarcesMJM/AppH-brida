@@ -497,7 +497,7 @@ login_form.addEventListener('submit', (e) =>{
     }
 })
 
-//Poner el nombre del ususuario en el home
+//Poner el nombre del usuario en el home
 const menu = document.getElementById('menu-toggle');
 menu.addEventListener('click', () =>{
     const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
@@ -522,10 +522,9 @@ btn_logout.addEventListener('click', () =>{
 const btn_perfil = document.getElementById('btn_perfil')
 btn_perfil.addEventListener('click', () =>{
     const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
-    const user = document.getElementById('user_perfil')
-    const last_name = document.getElementById('last_name_perfil')
-    const mail = document.getElementById('mail_perfil')
-    user.textContent = usuario_logueado.user
-    last_name.textContent = usuario_logueado.last_name
-    mail.textContent = usuario_logueado.mail
+
+    document.getElementById('user_name').textContent = usuario_logueado.user;
+    document.getElementById('user_perfil').value = usuario_logueado.user;
+    document.getElementById('last_name_perfil').value = usuario_logueado.last_name;
+    document.getElementById('mail_perfil').value = usuario_logueado.mail;
 });

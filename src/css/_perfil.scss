@@ -3,11 +3,16 @@
     align-items: center;
 }
 
+#perfil label {
+    font-family: $tipo_letra_titulos;
+}
+
 .input-perfil {
     width: 100%;
     border: none; 
     border-bottom: 1px solid $fondo_btn; 
     padding: 8px 0; 
     outline: none;
+    font-family: $tipo_letra;
 }
 
