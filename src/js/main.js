@@ -409,128 +409,74 @@ const today = dayjs();
 
 
 //Registro con localstorage
-function RegistroUser() {
+
+const register_form = document.getElementById("register_form");
+
+register_form.addEventListener('submit', (e) => {
+    e.preventDefault()
 
     const user = document.getElementById('user').value;
     const last_name = document.getElementById('last_name').value;
-    const email = document.getElementById('email').value;
+    const mail = document.getElementById('mail').value;
     const pwd = document.getElementById('pwd').value;
     const r_pwd = document.getElementById('r_pwd').value;
 
+    const Users = JSON.parse(localStorage.getItem('users')) || []
+    const usuario_registrados = Users.find(user => user.mail === mail)
+    /*
     if(pwd !== r_pwd) {
-        alert("Las contraseñas deben de coincidir");
-        return;
+        return Swal.fire({
+            title: 'Error!',
+            text: 'Las contraseñas deben de coincidir',
+            icon: 'error',
+            confirmButtonText: 'Cool'
+          })
     }
 
-    const Usuario = {
-        user: user,
-        last_name: last_name,
-        email: email,
-        password: pwd
+    if(usuario_registrados){
+        return Swal.fire({
+            title: 'Error!',
+            text: 'El usuario ya esta registrado',
+            icon: 'error',
+            confirmButtonText: 'Cool'
+          })
+    }
+    */
 
-    };
-
-    localStorage.setItem('usuario_' + email, JSON.stringify(Usuario));
-    alert("Registro Exitoso");
-
-} 
-
-// Se invoca la función parar el registro de usuario
-document.getElementsByClassName('btn_register').addEventListener('click', ()=>{
-    const button = document.getElementById('btn_register');
-
-    RegistroUser();
+    Users.push({user: user, last_name: last_name, mail: mail, pwd:pwd,r_pwd: r_pwd})
+    localStorage.setItem('users', JSON.stringify(Users))
+    /*
     Swal.fire({
-        title: "Registro Exitoso",
-        icon: "success"
-      });
+        title: 'exito!',
+        text: 'El registro fue exitoso',
+        icon: 'success',
+        confirmButtonText: 'Cool'
+      })
+    */
+   alert('Registro exitoso')
+   document.getElementById('register_form').reset()
+   cargarSeccion("login");
 
-      button.classList.add('btn_login');
-    
-    
-});
+})
 
-//Login con localstorage
-function LoginUser() {
-    const email = document.getElementById('email_login').value;
+
+//Logueo con localstorage
+const login_form = document.getElementById('login_form')
+login_form.addEventListener('submit', (e) =>{
+    e.preventDefault()
+
+    const mail = document.getElementById('mail_login').value;
     const pwd = document.getElementById('pwd_login').value;
 
-    const usuario = JSON.parse(localStorage.getItem('usuario_' + email));
-
-    if(usuario) {
-        if(usuario.password === pwd) {
-            alert("Bienvenido " + usuario.user);
-        } else {
-            alert("Contraseña incorrecta");
-        }
-    } else {
-        alert("Usuario no registrado");
+    const Users = JSON.parse(localStorage.getItem('users')) || []
+    const usuario_valido = Users.find(user => user.mail === mail && user.pwd === pwd)
+    if(!usuario_valido){
+        return alert('Usuario y/o contraseña incorrecta') //Se tienen que hacer con sweet alert
     }
-}
+    alert('logueo exitoso') //Se tienen que hacer con sweet alert
+    localStorage.setItem('logueo_exitoso', JSON.stringify(usuario_valido))
+    document.getElementById('login').reset()
+    cargarSeccion("home");
 
-//Recuperar contraseña
-function RecuperarPassword() {
-    const email = document.getElementById('email_forgetpw').value;
 
-    const usuario = JSON.parse(localStorage.getItem('usuario_' + email));
-
-    if(usuario) {
-        alert("Tu contraseña es: " + usuario.password);
-    } else {
-        alert("Usuario no registrado");
-    }
-}
-
-//Poner nombre de usuario en el home
-function NombreUsuario() {
-    const email = document.getElementById('email_login').value;
-    const usuario = JSON.parse(localStorage.getItem('usuario_' + email));
-    document.getElementById('user_home').textContent = usuario.user;
-}
-
-//informacion de perfil
-function InformacionPerfil() {
-    const email = document.getElementById('email_login').value;
-    const usuario = JSON.parse(localStorage.getItem('usuario_' + email));
-    document.getElementById('user_name').textContent = usuario.user;
-    document.getElementById('user_last_name').textContent = usuario.last_name;
-    document.getElementById('user_email').textContent = usuario.email;
-}
-
-      
-
-//Agregar Reserva
-function AgregarReserva() {
-    const user = JSON.parse(localStorage.getItem('usuario_' + email));
-    const name = usuario.user;
-    const pax = document.getElementById('paxCount').textContent;
-    const checkIn = document.getElementById('checkIn').textContent;
-    const checkOut = document.getElementById('checkOut').textContent;
-
-    const Reserva = {
-        name: name,
-        pax: pax,
-        checkIn: checkIn,
-        checkOut: checkOut
-    };
-
-    localStorage.setItem('reserva_' + email, JSON.stringify(Reserva));
-    alert("Reserva Exitosa");
-}
-
-//Mostrar Reserva
-function MostrarReserva() {
-    const email = document.getElementById('email_login').value;
-    const reserva = JSON.parse(localStorage.getItem('reserva_' + email));
-    document.getElementById('reserva_name').textContent = reserva.name;
-    document.getElementById('reserva_pax').textContent = reserva.pax;
-    document.getElementById('reserva_checkIn').textContent = reserva.checkIn;
-    document.getElementById('reserva_checkOut').textContent = reserva.checkOut;
-}
-
-//Cerrar sesión
-function CerrarSesion() {
-    document.getElementById('user_home').textContent = '';
-    document.getElementById('email_login').value = '';
-    document.getElementById('pwd_login').value = '';
-}
+})
