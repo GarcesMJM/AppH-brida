@@ -1,3 +1,5 @@
+const { default: Swal } = require("sweetalert2");
+
 let refs = {};
 let btns = {};
 
@@ -18,7 +20,7 @@ function init() {
     // Cargar la sección "login" después de 3 segundos
     setTimeout(() => {
         cargarSeccion("login");
-    }, 3000);
+    }, 1000);
 }
 
 // Función para inicializar el carrusel
@@ -91,28 +93,40 @@ function navegar() {
 
 // Función para asignar el evento "click" a los botones de volver
 function asignarVolver() {
-    let btns_volver = document.querySelectorAll(".btn-volver");
-    btns_volver.forEach((btn) => {
+    let btns_volver_login = document.querySelectorAll(".volver_login");
+    btns_volver_login.forEach((btn) => {
         btn.addEventListener("click", () => {
             cargarSeccion("login");
         });
     });
+
+    let btns_volver_home = document.querySelectorAll(".volver_home");
+    btns_volver_home.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            cargarSeccion("home");
+        });
+    });
+
+    let btn_volver_reservas = document.querySelector(".volver_reservas");
+    btn_volver_reservas.addEventListener("click", () => {
+            cargarSeccion("reservas");
+        });
 }
+
+
 
 // Función para asignar eventos a los botones del menú
 function asignarEventosMenu() {
+
+    if (btns["btn_login"]) {
+        btns["btn_login"].addEventListener("click", cambiarSeccion);
+    }
     if (btns["btn_forgetpw"]) {
         btns["btn_forgetpw"].addEventListener("click", cambiarSeccion);
     }
     if (btns["btn_register"]) {
         btns["btn_register"].addEventListener("click", cambiarSeccion);
-    }
-    if (btns["btn_login"]) {
-        btns["btn_login"].addEventListener("click", cambiarSeccion);
-    }
-    if (btns["btn_home"]) {
-        btns["btn_home"].addEventListener("click", cambiarSeccion);
-    }
+    }    
     if (btns["btn_perfil"]) {
         btns["btn_perfil"].addEventListener("click", cambiarSeccion);
     }
@@ -423,40 +437,34 @@ register_form.addEventListener('submit', (e) => {
 
     const Users = JSON.parse(localStorage.getItem('users')) || []
     const usuario_registrados = Users.find(user => user.mail === mail)
-    /*
+    
     if(pwd !== r_pwd) {
         return Swal.fire({
             title: 'Error!',
             text: 'Las contraseñas deben de coincidir',
             icon: 'error',
-            confirmButtonText: 'Cool'
           })
-    }
-
-    if(usuario_registrados){
+    }else if(usuario_registrados){
         return Swal.fire({
             title: 'Error!',
             text: 'El usuario ya esta registrado',
             icon: 'error',
-            confirmButtonText: 'Cool'
           })
+    } else {
+        Users.push({user: user, last_name: last_name, mail: mail, pwd:pwd,r_pwd: r_pwd})
+        localStorage.setItem('users', JSON.stringify(Users))
+        
+        Swal.fire({
+            title: 'exito!',
+            text: 'El registro fue exitoso',
+            icon: 'success',
+          })
+        
+       document.getElementById('register_form').reset();
+       cargarSeccion('login');
+
+
     }
-    */
-
-    Users.push({user: user, last_name: last_name, mail: mail, pwd:pwd,r_pwd: r_pwd})
-    localStorage.setItem('users', JSON.stringify(Users))
-    /*
-    Swal.fire({
-        title: 'exito!',
-        text: 'El registro fue exitoso',
-        icon: 'success',
-        confirmButtonText: 'Cool'
-      })
-    */
-   alert('Registro exitoso')
-   document.getElementById('register_form').reset()
-   cargarSeccion("login");
-
 })
 
 
@@ -471,12 +479,53 @@ login_form.addEventListener('submit', (e) =>{
     const Users = JSON.parse(localStorage.getItem('users')) || []
     const usuario_valido = Users.find(user => user.mail === mail && user.pwd === pwd)
     if(!usuario_valido){
-        return alert('Usuario y/o contraseña incorrecta') //Se tienen que hacer con sweet alert
+        return Swal.fire({
+            title: 'Error!',
+            text: 'El usuario y/o contraseña son incorrectos',
+            icon: 'error',
+          })
     }
-    alert('logueo exitoso') //Se tienen que hacer con sweet alert
-    localStorage.setItem('logueo_exitoso', JSON.stringify(usuario_valido))
-    document.getElementById('login').reset()
-    cargarSeccion("home");
-
-
+    else{
+        Swal.fire({
+            title: 'exito!',
+            text: 'El logueo fue exitoso',
+            icon: 'success',
+          })
+        localStorage.setItem('logueo_exitoso', JSON.stringify(usuario_valido))
+        document.getElementById('login_form').reset()
+        cargarSeccion('home')
+    }
 })
+
+//Poner el nombre del ususuario en el home
+const menu = document.getElementById('menu-toggle');
+menu.addEventListener('click', () =>{
+    const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
+    const nombre_usuario = document.getElementById('user_home')
+    nombre_usuario.textContent = usuario_logueado.user
+});
+
+//funcionalidad para cerrar sesion
+const btn_logout = document.getElementById('btn_logout')
+btn_logout.addEventListener('click', () =>{
+    localStorage.removeItem('logueo_exitoso')
+    Swal.fire({
+        title: 'exito!',
+        text: 'Sesion cerrada',
+        icon: 'success',
+      })
+    cargarSeccion('login')
+
+});
+
+//Traer los datos del usuario logueado a la seccion de perfil
+const btn_perfil = document.getElementById('btn_perfil')
+btn_perfil.addEventListener('click', () =>{
+    const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
+    const user = document.getElementById('user_perfil')
+    const last_name = document.getElementById('last_name_perfil')
+    const mail = document.getElementById('mail_perfil')
+    user.textContent = usuario_logueado.user
+    last_name.textContent = usuario_logueado.last_name
+    mail.textContent = usuario_logueado.mail
+});

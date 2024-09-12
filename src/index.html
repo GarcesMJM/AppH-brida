@@ -28,7 +28,7 @@
                     </div>
                     <!--- Contraseña -->
                     <div class="input-container">
-                    <input type="password" class="input" name="pwd" placeholder="Contraseña" required>
+                    <input type="password" class="input" id="pwd_login" name="pwd" placeholder="Contraseña" required>
                     </div>
                     <!--- Forget -->
                     <label class="label-forget">Olvidaste tu contraseña?</label><a id="btn_forgetpw" href="javascript:void(0);">Recuperar</a>
@@ -43,8 +43,8 @@
         <!--Register-->
         <section id="register" class="ocultar">
             <div class="login-container">
-                <div class="btn-volver">
-                    <a href="#" class="flecha">&larr;</a>
+                <div class="btn-volver volver_login">
+                    <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
                 </div>
                 <h2>Registrarse</h2>
                 <form id="register_form">
@@ -58,7 +58,7 @@
                     
                     <input type="password" class="input" id="r_pwd" placeholder="Confirmar Contraseña" required>
                     
-                    <button type="submit" class="login-btn">REGISTRARSE</button>
+                    <button type="submit" class="login-btn" >REGISTRARSE</button>
                     <label class="label-register">Ya tienes una cuenta?</label><a id="btn_login" href="javascript:void(0);">Iniciar Sesion</a>
                 </form>
             </div>
@@ -69,8 +69,8 @@
         <!--Password Recovery-->
         <section id="forgetpw" class="ocultar">
             <div class="login-container">
-                <div class="btn-volver">
-                    <a href="#" class="flecha">&larr;</a>
+                <div class="btn-volver volver_login" >
+                    <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
                 </div>
                 <h2>Recuperar Contraseña</h2>
                 <form id="recovery_form">
@@ -87,8 +87,8 @@
         <!--Perfil-->
         <section id="perfil" class="ocultar">
             <div class="login-container">
-                <div class="btn-volver">
-                    <a href="#" class="flecha">&larr;</a>
+                <div class="btn-volver volver_home">
+                    <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
                 </div>
                 <h2>Perfil</h2>
                 <div>
@@ -97,11 +97,11 @@
                 <h2 id="user_name<">Usuario</h2>
                 <form>
                     <label>Nombre:</label>
-                    <input type="text" id="user_name" name="user" class="input-perfil" placeholder="Nombre de Usuario">
+                    <input type="text" id="user_perfil" name="user" class="input-perfil" placeholder="Nombre de Usuario">
                     <label>Apellido:</label>
-                    <input type="text" id="user_last_name" name="last_name" class="input-perfil" placeholder="Apellido del Usuario">
+                    <input type="text" id="last_name_perfil" name="last_name" class="input-perfil" placeholder="Apellido del Usuario">
                     <label>Correo Electronico</label>
-                    <input type="text" name="mail" id="user_email" class="input-perfil" placeholder="Correo del usuario">
+                    <input type="text" name="mail" id="mail_perfil" class="input-perfil" placeholder="Correo del usuario">
                     <label>Deseas cambiar tu contraseña?</label>
                     <a href="#">Cambiar Contraseña</a>
                     <button type="submit" class="btn_login">Cerrar Sesión</button>
@@ -133,14 +133,14 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                             <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                        </svg> <p href="#" id="user_home" >Nombre</p>
+                        </svg> <p id="user_home" >Nombre</p>
                     </div>
                     <ul>
                             <li><a href="#" id="btn_reservas"><i class="bi bi-calendar" ></i> Reservas</a></li>
                             <li><a href="#" id="btn_comentarios"><i class="bi bi-chat-left-dots"></i> Comentarios</a></li>
                             <li><a href="#" id="btn_ubicacion"><i class="bi bi-geo-alt"></i> Ubicación</a></li>
                             <li><a href="#" id="btn_contacto"><i class="bi bi-telephone"></i> Contacto</a></li>
-                            <li><a href="#" class="out" id="btn_login"><i class="bi bi-power"></i> Cerrar sesión</a></li>
+                            <li><a href="#" class="out" id="btn_logout"><i class="bi bi-power"></i> Cerrar sesión</a></li>
                     </ul>
                 </div>
             
@@ -216,7 +216,9 @@
             
 <div class="container">
     <div class="header">
-        <button class="back-button">←</button>
+        <div class="btn-volver volver_home">
+            <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
+        </div>
         <span class="date-title" id="dateTitle">13 Sept. 2022</span>
     </div>
     <div class="calendar">
@@ -243,10 +245,12 @@
 
         <!--Agregar reserva-->
         <section id="agregar-reserva" class="ocultar">
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+            <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
 <div class="calendar-container">
     <div class="header">
-        <button class="back-button">←</button>
+        <div class="btn-volver volver_reservas">
+            <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
+        </div>
         <div class="month-year">
             <select id="monthSelect"></select>
             <select id="yearSelect"></select>
@@ -276,10 +280,10 @@
                 <button class="pax-button" onclick="changePax(1)">+</button>
             </div>
         </div>
-        <button class="confirm-button">Confirmar reserva</button>
+        <button class="confirm-booking">Confirmar reserva</button>
     </div>
 </div>
         </section>
-    <script src="js/main.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

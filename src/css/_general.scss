@@ -67,19 +67,19 @@ body{
 .btn-volver{
     width: 50px;              
     height: 50px;             
-    background-color: $fondo_negro;  
+    background-color: $fondo_blanco;  
     border-radius: 50%;       
     display: flex;            
     justify-content: center;  
     align-items: center;      
-    cursor: pointer;          
+    cursor: pointer;    
+    text-align: center;      
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin-right: auto;
 }
 
-.flecha {
-    color: $fondo_blanco;             
-    font-size: 24px;              
+.flecha {            
+    font-size: 50px;              
     font-weight: bold;
     margin-right: 10px;  
 }

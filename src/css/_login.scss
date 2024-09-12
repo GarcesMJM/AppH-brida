@@ -45,13 +45,17 @@
     height: 48.73px;
     border-radius: 10px;
     margin-bottom: 20px;
+    padding-left: 5%;
     border-style:none;
     background-color:$fondo_input;
     outline-color: $fondo_btn;
   }
+
+  .input:focus{
+    border: 2px solid $fondo_btn;
+  }
   
   .input::placeholder{
-    padding: 5%;
     color:black;
     font-family: $tipo_letra;
     font-weight: bold;
