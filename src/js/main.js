@@ -721,8 +721,11 @@ cambiar_pwd_form.addEventListener('submit', (e) =>{
     }
     document.getElementById('pwd_nueva').value = '';
     document.getElementById('pwd_nueva_r').value = '';
+    cargarSeccion('login');
+
 
 })
+
 
 //Funcionalidad para la seccion de reserva
 

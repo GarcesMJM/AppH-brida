@@ -64,6 +64,7 @@
     transition: transform 0.3s ease, opacity 0.3s ease; /* Transición suave */
     transform: translateX(-100%); /* Esconde el menú fuera de la pantalla */
     opacity: 0; /* Inicialmente invisible */
+    font-family: $tipo_letra;
 }
 
 #sidebar-menu.activarmenu {
