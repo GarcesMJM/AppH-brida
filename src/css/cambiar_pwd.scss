@@ -1,9 +1,24 @@
-#cambiar_pwd {
+#cambiar {
     justify-content: center;
     align-items: center;
+    border: 5px solid black;
 }
 
-#cambiar_pwd h2 {
-    margin-bottom: 80px;
+#cambiar h2 {
+    margin-bottom: 100px;
+    margin-left: 50px;
+}
+
+#cambiar input {
+    margin-left: 10px;
+}
+
+#cambiar label {
+    font-family: $tipo_letra;
+    margin-left: 30px;
+}
+
+#cambiar button {
+    margin-bottom: 30px;
 }
 

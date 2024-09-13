@@ -78,6 +78,7 @@ function navegar() {
     refs["perfil"] = document.getElementById("perfil");
     refs["reservas"] = document.getElementById("reservas");
     refs["agregar-reserva"] = document.getElementById("agregar-reserva");
+    refs["cambiar"] = document.getElementById("cambiar");
 
     btns["btn_forgetpw"] = document.getElementById("btn_forgetpw");
     btns["btn_register"] = document.getElementById("btn_register");
@@ -86,6 +87,7 @@ function navegar() {
     btns["btn_perfil"] = document.getElementById("btn_perfil");
     btns["btn_reservas"] = document.getElementById("btn_reservas");
     btns["btn_agregar-reserva"] = document.getElementById("btn_agregar-reserva");
+    btns["btn_cambiar_pwd"] = document.getElementById("btn_cambiar_pwd");
 
     asignarEventosMenu();
     asignarVolver();
@@ -135,6 +137,9 @@ function asignarEventosMenu() {
     }
     if (btns["btn_agregar-reserva"]) {
         btns["btn_agregar-reserva"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_cambiar_pwd"]) {
+        btns["btn_cambiar_pwd"].addEventListener("click", cambiarSeccion);
     }
 }
 
