@@ -81,6 +81,7 @@ function navegar() {
     refs["ubicacion"] = document.getElementById("ubicacion");
     refs["comentarios"] = document.getElementById("comentarios");
     refs["cambiar"] = document.getElementById("cambiar");
+    refs["contacto"] = document.getElementById("contacto");
 
     btns["btn_forgetpw"] = document.getElementById("btn_forgetpw");
     btns["btn_register"] = document.getElementById("btn_register");
@@ -92,6 +93,7 @@ function navegar() {
     btns["btn_ubicacion"] = document.getElementById("btn_ubicacion");
     btns["btn_comentarios"] = document.getElementById("btn_comentarios");
     btns["btn_cambiar_pwd"] = document.getElementById("btn_cambiar_pwd");
+    btns["btn_contacto"] = document.getElementById("btn_contacto");
 
     asignarEventosMenu();
     asignarVolver();
@@ -148,9 +150,11 @@ function asignarEventosMenu() {
     if (btns["btn_comentarios"]) {
         btns["btn_comentarios"].addEventListener("click", cambiarSeccion);
     }
-
     if (btns["btn_cambiar_pwd"]) {
         btns["btn_cambiar_pwd"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_contacto"]) {
+        btns["btn_contacto"].addEventListener("click", cambiarSeccion);
     }
 }
 
@@ -226,14 +230,8 @@ function initCalendar() {
     const calendarDays = document.getElementById('calendar-days');
     const dateTitle = document.getElementById('dateTitle');
     const eventList = document.getElementById('eventList');
-    const monthYearDisplay = document.getElementById('monthYearDisplay');
-    const prevMonthBtn = document.getElementById('prevMonth');
-    const nextMonthBtn = document.getElementById('nextMonth');
-
-    if (!calendarDays || !dateTitle || !eventList || !monthYearDisplay || !prevMonthBtn || !nextMonthBtn) {
-        console.error('Uno o más elementos del DOM no se encontraron');
-        return;
-    }
+    const monthSelect = document.getElementById('monthSelect');
+    const yearSelect = document.getElementById('yearSelect');
 
     let currentDate = new Date();
     let displayedMonth = currentDate.getMonth();
@@ -241,12 +239,28 @@ function initCalendar() {
 
     function updateDateTitle(date) {
         const options = { day: 'numeric', month: 'short', year: 'numeric' };
-        dateTitle.textContent = date.toLocaleDateString('es-ES', options);
+        dateTitle.textContent = date.toLocaleDateString('en-US', options);
     }
 
-    function updateMonthYearDisplay() {
-        const options = { month: 'long', year: 'numeric' };
-        monthYearDisplay.textContent = new Date(displayedYear, displayedMonth).toLocaleDateString('es-ES', options);
+    function populateMonthYearDropdowns() {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        months.forEach((month, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = month;
+            monthSelect.appendChild(option);
+        });
+
+        const currentYear = new Date().getFullYear();
+        for (let year = currentYear - 10; year <= currentYear + 10; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
+        }
+
+        monthSelect.value = displayedMonth;
+        yearSelect.value = displayedYear;
     }
 
     function generateCalendar(year, month) {
@@ -262,48 +276,50 @@ function initCalendar() {
             const dayElement = document.createElement('div');
             dayElement.textContent = day;
             dayElement.classList.add('day');
+
             if (day === currentDate.getDate() && month === currentDate.getMonth() && year === currentDate.getFullYear()) {
-                dayElement.classList.add('selected');
+                dayElement.classList.add('today');
             }
+
+            if (day === currentDate.getDate() && month === displayedMonth && year === displayedYear) {
+                dayElement.classList.add('selected');
+                dayElement.id = 'selectedDay';
+            }
+
             dayElement.addEventListener('click', () => {
                 currentDate = new Date(year, month, day);
                 updateDateTitle(currentDate);
                 generateCalendar(year, month);
                 updateEventList(currentDate);
             });
+
             calendarDays.appendChild(dayElement);
         }
-        updateMonthYearDisplay();
     }
 
-    prevMonthBtn.addEventListener('click', () => {
-        displayedMonth--;
-        if (displayedMonth < 0) {
-            displayedMonth = 11;
-            displayedYear--;
-        }
+    function updateEventList(date) {
+        // This function would be implemented to show events for the selected date
+        // For now, we'll just clear the list
+        eventList.innerHTML = '';
+    }
+
+    monthSelect.addEventListener('change', () => {
+        displayedMonth = parseInt(monthSelect.value);
         generateCalendar(displayedYear, displayedMonth);
     });
 
-    nextMonthBtn.addEventListener('click', () => {
-        displayedMonth++;
-        if (displayedMonth > 11) {
-            displayedMonth = 0;
-            displayedYear++;
-        }
+    yearSelect.addEventListener('change', () => {
+        displayedYear = parseInt(yearSelect.value);
         generateCalendar(displayedYear, displayedMonth);
     });
 
+    populateMonthYearDropdowns();
     updateDateTitle(currentDate);
     generateCalendar(displayedYear, displayedMonth);
     updateEventList(currentDate);
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCalendar);
-} else {
-    initCalendar();
-}
+document.addEventListener('DOMContentLoaded', initCalendar);
 
 
 // Funcionalidad para la sección de agregar reserva
@@ -536,19 +552,21 @@ btn_perfil.addEventListener('click', () =>{
     mail.textContent = usuario_logueado.mail
 });
 
-//Funcionalidad para la seccion de reservas
-
-function updateEventList(user, check_in, check_out) {
+//Funcionalidad para la seccion de reserva
+function updateEventList(user, check_in, check_out, pax) {
     if (!user || !check_in || !check_out) {
         return;
     }
     else{
-    const selectedDate = currentDate;
-
+    const dia = document.querySelectorAll('.day.selected');
+    const mes = document.getElementById('monthSelect');
+    const year = document.getElementById('yearSelect');
+    alert (dia.textContent)
+    const selectedDate = new Date(year.value, mes.value, dia.textContent);
     fecha = check_in.split(' ')[1].split('-');
     const date = new Date(fecha[0], fecha[1] - 1, fecha[2]);
     eventList.innerHTML = '';
-    if (date.getDate() === selectedDate.getDate()  && date.getMonth() === selectedDate.getMonth() && date.getFullYear() === selectedDate.getFullYear()) {
+    if (date.getDate() === selectDate.getDate()  && date.gextMonth() === selectDate.getMonth() && date.getFullYear() === selectDate.getFullYear()) {
         const event = document.createElement('div');
         event.className = 'event';
         event.innerHTML = `
@@ -557,6 +575,7 @@ function updateEventList(user, check_in, check_out) {
                 <div>Sr. ${user}</div>
                 <div>${check_in})}</div>
                 <div>${check_out})}</div>
+                <div>PAX: ${pax})}</div>
             </div>
         `;
         eventList.appendChild(event);
@@ -564,17 +583,19 @@ function updateEventList(user, check_in, check_out) {
 }
 }
 
-const btn_reservas = document.getElementById('btn_reservas')
+const btn_reservas = document.getElementById('selectedDay');
 btn_reservas.addEventListener('click', () =>{
     const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
     const user = usuario_logueado.user
     const bookings = JSON.parse(localStorage.getItem('bookings')) || []
-    book = bookings.find(booking => booking.user === user)
+    books = bookings.filter(booking => booking.user === user)
 
     
 
-    if(book){
-        updateEventList(book.user, book.check_in, book.check_out)
+    if(books.length > 0){
+        books.forEach(booking => {
+            updateEventList(booking.user, booking.check_in, booking.check_out, booking.pax) 
+        });
     }
     else{
         return Swal.fire({
@@ -629,7 +650,7 @@ btn_agregar_reserva.addEventListener('click', () =>{
     
 });
 
-//Funcionalidad para la seccipon de comentarios
+//Funcionalidad para la sección de comentarios
 const commentsData = [
     { username: "Usuario 1", rating: 5, text: "Excelente servicio, muy recomendado.", date: "2023-09-15" },
     { username: "Usuario 2", rating: 4, text: "Buena experiencia en general.", date: "2023-09-10" },
