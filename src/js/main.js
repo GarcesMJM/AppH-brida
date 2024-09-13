@@ -119,6 +119,12 @@ function asignarVolver() {
     btn_volver_reservas.addEventListener("click", () => {
             cargarSeccion("reservas");
         });
+
+    let btn_volver_perfil = document.querySelector(".volver_perfil");
+    btn_volver_perfil.addEventListener("click", () => {
+            cargarSeccion("perfil");
+        });
+
 }
 
 
@@ -544,13 +550,73 @@ btn_logout.addEventListener('click', () =>{
 const btn_perfil = document.getElementById('btn_perfil')
 btn_perfil.addEventListener('click', () =>{
     const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
-    const user = document.getElementById('user_perfil')
-    const last_name = document.getElementById('last_name_perfil')
-    const mail = document.getElementById('mail_perfil')
-    user.textContent = usuario_logueado.user
-    last_name.textContent = usuario_logueado.last_name
-    mail.textContent = usuario_logueado.mail
+    document.getElementById('user_name').textContent = usuario_logueado.user;
+    document.getElementById('user_perfil').value = usuario_logueado.user;
+    document.getElementById('last_name_perfil').value = usuario_logueado.last_name;
+    document.getElementById('mail_perfil').value = usuario_logueado.mail;
 });
+
+//Funcionalidad para cambiar la contraseña de un usuario logueado
+const btn_cambiar_pwd = document.getElementById('btn_cambiar_pwd')
+btn_cambiar_pwd.addEventListener('click', ()=>{
+    usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
+    document.getElementById('pwd_vieja').value = usuario_logueado.pwd;
+    
+})
+
+const cambiar_pwd_form = document.getElementById('cambiar_contraseña')
+cambiar_pwd_form.addEventListener('submit', (e) =>{
+    e.preventDefault()
+
+    const pwd_vieja = document.getElementById('pwd_vieja').value;
+    const pwd_nueva = document.getElementById('pwd_nueva').value;
+    const pwd_nueva_r = document.getElementById('pwd_nueva_r').value;
+
+    const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
+    const usuarios = JSON.parse(localStorage.getItem('users')) || []
+
+    if(pwd_nueva === pwd_nueva_r){
+
+        if(pwd_nueva === pwd_vieja || pwd_nueva_r === pwd_vieja)
+        {
+            return Swal.fire({
+                title: 'Error!',
+                text: 'La nueva contraseña no puede ser igual a la anterior',
+                icon: 'error',
+              }) 
+        }
+        else
+        {
+            usuario_logueado.pwd = pwd_nueva;
+            usuario_logueado.r_pwd = pwd_nueva;
+        
+            //Se busca el usuario para cambiar el correo
+            usuarios.forEach(function(usuario){
+                if(usuario.mail === usuario_logueado.mail)
+                {
+                    usuario.pwd = pwd_nueva;
+                    usuario.r_pwd = pwd_nueva;
+                }
+            })
+
+            localStorage.setItem('logueo_exitoso', JSON.stringify(usuario_logueado))
+            localStorage.setItem('users', JSON.stringify(usuarios))
+        }
+
+        
+    }
+    else {
+
+        return Swal.fire({
+            title: 'Error!',
+            text: 'Las contraseñas deben de coincidir',
+            icon: 'error',
+          })
+    }
+    document.getElementById('pwd_nueva').value = '';
+    document.getElementById('pwd_nueva_r').value = '';
+
+})
 
 //Funcionalidad para la seccion de reserva
 function updateEventList(user, check_in, check_out, pax) {
