@@ -242,6 +242,9 @@ function initCalendar() {
     let currentDate = new Date();
     let displayedMonth = currentDate.getMonth();
     let displayedYear = currentDate.getFullYear();
+    let check_in = '';
+    let check_out = '';
+    let pax = 0;
 
     function updateDateTitle(date) {
         const options = { day: 'numeric', month: 'short', year: 'numeric' };
@@ -282,6 +285,7 @@ function initCalendar() {
             const dayElement = document.createElement('div');
             dayElement.textContent = day;
             dayElement.classList.add('day');
+            dayElement.id = 'selectedDay';
 
             if (day === currentDate.getDate() && month === currentDate.getMonth() && year === currentDate.getFullYear()) {
                 dayElement.classList.add('today');
@@ -289,7 +293,6 @@ function initCalendar() {
 
             if (day === currentDate.getDate() && month === displayedMonth && year === displayedYear) {
                 dayElement.classList.add('selected');
-                dayElement.id = 'selectedDay';
             }
 
             dayElement.addEventListener('click', () => {
@@ -303,11 +306,108 @@ function initCalendar() {
         }
     }
 
-    function updateEventList(date) {
-        // This function would be implemented to show events for the selected date
-        // For now, we'll just clear the list
+    function updateEventList(user, check_in, check_out, pax) {
+        eventList.innerHTML = ''; // Limpiar la lista de eventos
+        const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+        
+        if(check_in !== undefined && check_out !== undefined){
+            
+        const fecha = check_in.split(' ')[1].split('-');
+        const fecha_book = new Date(fecha[2], fecha[1], fecha[0]);
+        alert(currentDate.getDate())
+        
         eventList.innerHTML = '';
+        if (currentDate.getDate() === fecha_book.getDate()  && currentDate.getMonth() === fecha_book.getMonth()-1 && currentDate.getFullYear() === fecha_book.getFullYear()) {
+            const event = document.createElement('div');
+            event.className = 'event';
+            event.innerHTML = `
+                <div class="event-icon">👤</div>
+                <div class="event-info">
+                    <div>Sr. ${user}</div>
+                    <div>${check_in}</div>
+                    <div>${check_out}</div>
+                    <div>PAX: ${pax}</div>
+                    <div class="icons">
+                        <i class="fas fa-trash-alt"></i>
+                        <i class="fas fa-edit"></i>
+                    </div>
+                </div>
+            `;
+            alert("llegué")
+            eventList.appendChild(event);
+        }
     }
+    }
+
+    function loadBookings() {
+        btn_reservas.addEventListener('click', () =>{
+            const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
+            const user = usuario_logueado.user
+            const bookings = JSON.parse(localStorage.getItem('bookings')) || []
+            books = bookings.filter(booking => booking.user === user)
+        
+            if(books.length > 0){
+                books.forEach(booking => {
+                    if(booking.check_in != undefined && booking.check_out != undefined){
+                    check_in = booking.check_in
+                    check_out = booking.check_out
+                    pax = booking.pax
+                     updateEventList(booking.user, booking.check_in, booking.check_out, booking.pax)
+                    }
+                });
+            }
+            else{
+                return Swal.fire({
+                    title: 'Error!',
+                    text: 'No hay reservas',
+                    icon: 'error',
+                  })
+            }
+            })
+        }
+
+        const btn_agregar_reserva = document.getElementById('btn-agregar-reserva')
+btn_agregar_reserva.addEventListener('click', () =>{
+    const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
+    const check_in = document.getElementById('check-in')
+    const check_out = document.getElementById('check-out')
+    const pax = document.getElementById('paxCount');
+    const user = usuario_logueado.user;
+
+    const bookings = JSON.parse(localStorage.getItem('bokings')) || []
+
+    if (check_in === null || check_out === null){
+        return Swal.fire({
+            title: 'Error!',
+            text: 'Seleccione las fechas',
+            icon: 'error',
+            })
+    }
+    else {
+        
+        if (bookings.find(booking => booking.check_in === check_in.textContent)){
+        return Swal.fire({
+            title: 'Error!',
+            text: 'Ya hay una reserva para esas fechas',
+            icon: 'error',
+            })}
+    else{
+        bookings.push({user: user, check_in: check_in.textContent, check_out:check_out.textContent, pax: pax.textContent})
+        localStorage.setItem('bookings', JSON.stringify(bookings))
+        Swal.fire({
+            title: 'exito!',
+            text: 'Reserva exitosa',
+            icon: 'success',
+          })
+
+        loadBookings();
+        cargarSeccion('reservas');
+    }   
+    
+    }
+    
+});
+    
 
     monthSelect.addEventListener('change', () => {
         displayedMonth = parseInt(monthSelect.value);
@@ -322,10 +422,14 @@ function initCalendar() {
     populateMonthYearDropdowns();
     updateDateTitle(currentDate);
     generateCalendar(displayedYear, displayedMonth);
-    updateEventList(currentDate);
+    loadBookings();
 }
 
-document.addEventListener('DOMContentLoaded', initCalendar);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCalendar);
+} else {
+    initCalendar();
+}
 
 
 // Funcionalidad para la sección de agregar reserva
@@ -451,7 +555,6 @@ const today = dayjs();
 
 
 //Registro con localstorage
-
 const register_form = document.getElementById("register_form");
 
 register_form.addEventListener('submit', (e) => {
@@ -601,9 +704,12 @@ cambiar_pwd_form.addEventListener('submit', (e) =>{
 
             localStorage.setItem('logueo_exitoso', JSON.stringify(usuario_logueado))
             localStorage.setItem('users', JSON.stringify(usuarios))
+            Swal.fire({
+                title: 'exito!',
+                text: 'La contraseña fue cambiada exitosamente',
+                icon: 'success',
+              })
         }
-
-        
     }
     else {
 
@@ -619,44 +725,15 @@ cambiar_pwd_form.addEventListener('submit', (e) =>{
 })
 
 //Funcionalidad para la seccion de reserva
-function updateEventList(user, check_in, check_out, pax) {
-    if (!user || !check_in || !check_out) {
-        return;
-    }
-    else{
-    const dia = document.querySelectorAll('.day.selected');
-    const mes = document.getElementById('monthSelect');
-    const year = document.getElementById('yearSelect');
-    alert (dia.textContent)
-    const selectedDate = new Date(year.value, mes.value, dia.textContent);
-    fecha = check_in.split(' ')[1].split('-');
-    const date = new Date(fecha[0], fecha[1] - 1, fecha[2]);
-    eventList.innerHTML = '';
-    if (date.getDate() === selectDate.getDate()  && date.gextMonth() === selectDate.getMonth() && date.getFullYear() === selectDate.getFullYear()) {
-        const event = document.createElement('div');
-        event.className = 'event';
-        event.innerHTML = `
-            <div class="event-icon">👤</div>
-            <div class="event-info">
-                <div>Sr. ${user}</div>
-                <div>${check_in})}</div>
-                <div>${check_out})}</div>
-                <div>PAX: ${pax})}</div>
-            </div>
-        `;
-        eventList.appendChild(event);
-    }
-}
-}
 
-const btn_reservas = document.getElementById('selectedDay');
-btn_reservas.addEventListener('click', () =>{
-    const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
+
+/*const btn_reservas = document.getElementById('selectedDay')
+if(btn_reservas){
+    btn_reservas.addEventListener('click', () =>{
+        const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
     const user = usuario_logueado.user
     const bookings = JSON.parse(localStorage.getItem('bookings')) || []
     books = bookings.filter(booking => booking.user === user)
-
-    
 
     if(books.length > 0){
         books.forEach(booking => {
@@ -670,51 +747,11 @@ btn_reservas.addEventListener('click', () =>{
             icon: 'error',
           })
     }
-      
-});
+    })
+}*/  
 
 //Funcionalidad para la seccion de agregar reserva
-const btn_agregar_reserva = document.getElementById('btn-agregar-reserva')
-btn_agregar_reserva.addEventListener('click', () =>{
-    const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
-    const check_in = document.getElementById('check-in')
-    const check_out = document.getElementById('check-out')
-    const pax = document.getElementById('paxCount');
-    const user = usuario_logueado.user;
 
-    const bookings = JSON.parse(localStorage.getItem('bokings')) || []
-
-    if (check_in === null || check_out === null){
-        return Swal.fire({
-            title: 'Error!',
-            text: 'Seleccione las fechas',
-            icon: 'error',
-            })
-    }
-    else {
-        
-        if (bookings.find(booking => booking.check_in === check_in)){
-        return Swal.fire({
-            title: 'Error!',
-            text: 'Ya hay una reserva para esas fechas',
-            icon: 'error',
-            })}
-    else{
-        bookings.push({user: user, check_in: check_in.textContent, check_out:check_out.textContent, pax: pax})
-        localStorage.setItem('bookings', JSON.stringify(bookings))
-        Swal.fire({
-            title: 'exito!',
-            text: 'Reserva exitosa',
-            icon: 'success',
-          })
-
-        
-        cargarSeccion('reservas');
-    }   
-    
-    }
-    
-});
 
 //Funcionalidad para la sección de comentarios
 const commentsData = [
