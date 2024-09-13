@@ -80,6 +80,7 @@ function navegar() {
     refs["agregar-reserva"] = document.getElementById("agregar-reserva");
     refs["ubicacion"] = document.getElementById("ubicacion");
     refs["comentarios"] = document.getElementById("comentarios");
+    refs["cambiar"] = document.getElementById("cambiar");
 
     btns["btn_forgetpw"] = document.getElementById("btn_forgetpw");
     btns["btn_register"] = document.getElementById("btn_register");
@@ -90,6 +91,7 @@ function navegar() {
     btns["btn_agregar-reserva"] = document.getElementById("btn_agregar-reserva");
     btns["btn_ubicacion"] = document.getElementById("btn_ubicacion");
     btns["btn_comentarios"] = document.getElementById("btn_comentarios");
+    btns["btn_cambiar_pwd"] = document.getElementById("btn_cambiar_pwd");
 
     asignarEventosMenu();
     asignarVolver();
@@ -147,6 +149,9 @@ function asignarEventosMenu() {
         btns["btn_comentarios"].addEventListener("click", cambiarSeccion);
     }
 
+    if (btns["btn_cambiar_pwd"]) {
+        btns["btn_cambiar_pwd"].addEventListener("click", cambiarSeccion);
+    }
 }
 
 // Función para cambiar de sección

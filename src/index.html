@@ -103,10 +103,31 @@
                     <label>Correo Electronico</label>
                     <input type="email" name="mail" id="mail_perfil" class="input-perfil" readonly>
                     <label>Deseas cambiar tu contraseña?</label>
-                    <a href="#">Cambiar</a>
+                    <a id="btn_cambiar_pwd" href="javascript:void(0);">Cambiar</a>
                     <button type="submit" class="login-btn">Cerrar Sesión</button>
                 </form>
                 
+        </section>
+
+        <!--Cambiar Contraseña-->
+        <section id="cambiar" class="ocultar">
+            <div class="login-container">
+                <div class="btn-volver volver_login">
+                    <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
+                </div>
+                <h2>Cambiar Contraseña</h2>
+                <form id="cambiar_contraseña">
+                    <input type="text" class="input" id="pwd_vieja" placeholder="Contraseña actual" required>
+
+                    <input type="text" class="input" id="pwd_nueva" placeholder="Contraseña nueva" required>
+
+                    <input type="text" class="input" id="pwd_nueva_r" placeholder="Confirmar Contraseña nueva" required>
+
+                    <button type="submit" class="login-btn" >ACTUALIZAR</button>
+                    <label>Olvidaste tu contraseña?</label><a id="btn_forgetpw" href="javascript:void(0);">Recuperar</a>
+                </form>
+
+            </div>
         </section>
 
         <!--Home-->
