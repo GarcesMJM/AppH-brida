@@ -78,6 +78,8 @@ function navegar() {
     refs["perfil"] = document.getElementById("perfil");
     refs["reservas"] = document.getElementById("reservas");
     refs["agregar-reserva"] = document.getElementById("agregar-reserva");
+    refs["ubicacion"] = document.getElementById("ubicacion");
+    refs["comentarios"] = document.getElementById("comentarios");
 
     btns["btn_forgetpw"] = document.getElementById("btn_forgetpw");
     btns["btn_register"] = document.getElementById("btn_register");
@@ -86,6 +88,8 @@ function navegar() {
     btns["btn_perfil"] = document.getElementById("btn_perfil");
     btns["btn_reservas"] = document.getElementById("btn_reservas");
     btns["btn_agregar-reserva"] = document.getElementById("btn_agregar-reserva");
+    btns["btn_ubicacion"] = document.getElementById("btn_ubicacion");
+    btns["btn_comentarios"] = document.getElementById("btn_comentarios");
 
     asignarEventosMenu();
     asignarVolver();
@@ -136,6 +140,13 @@ function asignarEventosMenu() {
     if (btns["btn_agregar-reserva"]) {
         btns["btn_agregar-reserva"].addEventListener("click", cambiarSeccion);
     }
+    if (btns["btn_ubicacion"]) {
+        btns["btn_ubicacion"].addEventListener("click", cambiarSeccion);
+    }
+    if (btns["btn_comentarios"]) {
+        btns["btn_comentarios"].addEventListener("click", cambiarSeccion);
+    }
+
 }
 
 // Función para cambiar de sección
@@ -260,23 +271,6 @@ function initCalendar() {
         updateMonthYearDisplay();
     }
 
-    function updateEventList(date) {
-        eventList.innerHTML = '';
-        if (date.getDate() === 13 && date.getMonth() === 8 && date.getFullYear() === 2022) {
-            const event = document.createElement('div');
-            event.className = 'event';
-            event.innerHTML = `
-                <div class="event-icon">👤</div>
-                <div class="event-info">
-                    <div>Sr. Juan</div>
-                    <div>${date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-                    <div>10:00 AM</div>
-                </div>
-            `;
-            eventList.appendChild(event);
-        }
-    }
-
     prevMonthBtn.addEventListener('click', () => {
         displayedMonth--;
         if (displayedMonth < 0) {
@@ -365,18 +359,25 @@ const today = dayjs();
             dateRange.innerHTML = '';
             if (startDate) {
                 const checkIn = document.createElement('div');
-                checkIn.textContent = `Check-in: ${startDate.format('DD-MM-YYYY HH:mm')}`;
+                checkIn.id = 'check-in';
+                checkIn.textContent = `Check-in: ${startDate.format('DD-MM-YYYY'+ ' 12:00')}`;
                 dateRange.appendChild(checkIn);
             }
             if (endDate) {
                 const checkOut = document.createElement('div');
-                checkOut.textContent = `Check-out: ${endDate.add(1, 'day').format('DD-MM-YYYY HH:mm')}`;
+                checkOut.id = 'check-out';
+                checkOut.textContent = `Check-out: ${endDate.add(1, 'day').format('DD-MM-YYYY' + ' 3:00')}`;
                 dateRange.appendChild(checkOut);
             }
             if (!startDate && !endDate) {
                 dateRange.textContent = 'Seleccione el numero de dias';
             }
         }
+
+        const menos = document.getElementById('menos');
+        const mas = document.getElementById('mas');
+        menos.addEventListener('click', () => changePax(-1));
+        mas.addEventListener('click', () => changePax(1));
 
         function changePax(delta) {
             pax = Math.max(1, pax + delta);
@@ -497,7 +498,7 @@ login_form.addEventListener('submit', (e) =>{
     }
 })
 
-//Poner el nombre del usuario en el home
+//Poner el nombre del ususuario en el home
 const menu = document.getElementById('menu-toggle');
 menu.addEventListener('click', () =>{
     const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
@@ -522,9 +523,179 @@ btn_logout.addEventListener('click', () =>{
 const btn_perfil = document.getElementById('btn_perfil')
 btn_perfil.addEventListener('click', () =>{
     const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
-
-    document.getElementById('user_name').textContent = usuario_logueado.user;
-    document.getElementById('user_perfil').value = usuario_logueado.user;
-    document.getElementById('last_name_perfil').value = usuario_logueado.last_name;
-    document.getElementById('mail_perfil').value = usuario_logueado.mail;
+    const user = document.getElementById('user_perfil')
+    const last_name = document.getElementById('last_name_perfil')
+    const mail = document.getElementById('mail_perfil')
+    user.textContent = usuario_logueado.user
+    last_name.textContent = usuario_logueado.last_name
+    mail.textContent = usuario_logueado.mail
 });
+
+//Funcionalidad para la seccion de reservas
+
+function updateEventList(user, check_in, check_out) {
+    if (!user || !check_in || !check_out) {
+        return;
+    }
+    else{
+    const selectedDate = currentDate;
+
+    fecha = check_in.split(' ')[1].split('-');
+    const date = new Date(fecha[0], fecha[1] - 1, fecha[2]);
+    eventList.innerHTML = '';
+    if (date.getDate() === selectedDate.getDate()  && date.getMonth() === selectedDate.getMonth() && date.getFullYear() === selectedDate.getFullYear()) {
+        const event = document.createElement('div');
+        event.className = 'event';
+        event.innerHTML = `
+            <div class="event-icon">👤</div>
+            <div class="event-info">
+                <div>Sr. ${user}</div>
+                <div>${check_in})}</div>
+                <div>${check_out})}</div>
+            </div>
+        `;
+        eventList.appendChild(event);
+    }
+}
+}
+
+const btn_reservas = document.getElementById('btn_reservas')
+btn_reservas.addEventListener('click', () =>{
+    const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
+    const user = usuario_logueado.user
+    const bookings = JSON.parse(localStorage.getItem('bookings')) || []
+    book = bookings.find(booking => booking.user === user)
+
+    
+
+    if(book){
+        updateEventList(book.user, book.check_in, book.check_out)
+    }
+    else{
+        return Swal.fire({
+            title: 'Error!',
+            text: 'No hay reservas',
+            icon: 'error',
+          })
+    }
+      
+});
+
+//Funcionalidad para la seccion de agregar reserva
+const btn_agregar_reserva = document.getElementById('btn-agregar-reserva')
+btn_agregar_reserva.addEventListener('click', () =>{
+    const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
+    const check_in = document.getElementById('check-in')
+    const check_out = document.getElementById('check-out')
+    const pax = document.getElementById('paxCount');
+    const user = usuario_logueado.user;
+
+    const bookings = JSON.parse(localStorage.getItem('bokings')) || []
+
+    if (check_in === null || check_out === null){
+        return Swal.fire({
+            title: 'Error!',
+            text: 'Seleccione las fechas',
+            icon: 'error',
+            })
+    }
+    else {
+        
+        if (bookings.find(booking => booking.check_in === check_in)){
+        return Swal.fire({
+            title: 'Error!',
+            text: 'Ya hay una reserva para esas fechas',
+            icon: 'error',
+            })}
+    else{
+        bookings.push({user: user, check_in: check_in.textContent, check_out:check_out.textContent, pax: pax})
+        localStorage.setItem('bookings', JSON.stringify(bookings))
+        Swal.fire({
+            title: 'exito!',
+            text: 'Reserva exitosa',
+            icon: 'success',
+          })
+
+        
+        cargarSeccion('reservas');
+    }   
+    
+    }
+    
+});
+
+//Funcionalidad para la seccipon de comentarios
+const commentsData = [
+    { username: "Usuario 1", rating: 5, text: "Excelente servicio, muy recomendado.", date: "2023-09-15" },
+    { username: "Usuario 2", rating: 4, text: "Buena experiencia en general.", date: "2023-09-10" },
+];
+
+function createStars(rating) {
+    let starsHTML = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= rating) {
+            starsHTML += '<span class="star">★</span>';
+        } else {
+            starsHTML += '<span class="star" style="color: #ccc;">★</span>';
+        }
+    }
+    return starsHTML;
+}
+
+function renderComments() {
+    const container = document.getElementById('commentsContainer');
+    commentsData.forEach(comment => {
+        const commentElement = document.createElement('div');
+        commentElement.className = 'comment';
+        commentElement.innerHTML = `
+            <div class="user-info">
+                <div class="avatar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="username">${comment.username}</div>
+            </div>
+            <div class="stars">${createStars(comment.rating)}</div>
+            <div class="comment-text">${comment.text}</div>
+            <div class="comment-date">${comment.date}</div>
+        `;
+        container.appendChild(commentElement);
+    });
+}
+
+// Renderizar los comentarios al cargar la página
+renderComments();
+
+
+//Funcionalidad para la sección de la ubicación
+function initMap() {
+    // Coordenadas de ejemplo (puedes cambiarlas a la ubicación que desees)
+    const location = { lat: 40.416775, lng: -3.703790 };
+    
+    const map = new google.maps.Map(document.getElementById('map'), {
+        center: location,
+        zoom: 15
+    });
+
+    const marker = new google.maps.Marker({
+        position: location,
+        map: map,
+        title: 'Ubicación'
+    });
+
+    // Obtener la dirección basada en las coordenadas
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: location }, (results, status) => {
+        if (status === 'OK') {
+            if (results[0]) {
+                document.getElementById('address').textContent = results[0].formatted_address;
+            } else {
+                document.getElementById('address').textContent = 'Dirección no encontrada';
+            }
+        } else {
+            document.getElementById('address').textContent = 'Error al obtener la dirección';
+        }
+    });
+}
