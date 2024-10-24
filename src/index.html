@@ -11,7 +11,7 @@
     <section id="app">
         
         <!--Splash-->
-        <section id="splash">
+        <section id="splash" class="ocultar">
             <img src="img/logo.jpg" alt="splash">
         </section>
 
@@ -42,10 +42,10 @@
 
         <!--Register-->
         <section id="register" class="ocultar">
-            <div class="login-container">
-                <div class="btn-volver volver_login">
-                    <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
-                </div>
+            <div class="btn-volver volver_login">
+                <a href="#" class="flecha"><i class="bi bi-arrow-left-circle-fill"></i></a>
+            </div>
+            <div class="login-container">                
                 <h2>Registrarse</h2>
                 <form id="register_form">
                     <input type="text" class="input" id="user" placeholder="Nombre" required>
@@ -68,10 +68,10 @@
 
         <!--Password Recovery-->
         <section id="forgetpw" class="ocultar">
-            <div class="login-container">
-                <div class="btn-volver volver_login" >
-                    <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
+            <div class="btn-volver volver_login" >
+                    <a href="#" class="flecha"><i class="bi bi-arrow-left-circle-fill"></i></a>
                 </div>
+            <div class="login-container">
                 <h2>Recuperar Contraseña</h2>
                 <form id="recovery_form">
                     <input type="Email" class="input" id="email_forgetpw" name="mail" placeholder="Confirmar Correo" required>
@@ -86,10 +86,10 @@
         </section>
         <!--Perfil-->
         <section id="perfil" class="ocultar">
+            <div class="btn-volver volver_home">
+                <a href="#" class="flecha"><i class="bi bi-arrow-left-circle-fill"></i></a>
+            </div>
             <div class="login-container">
-                <div class="btn-volver volver_home">
-                    <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
-                </div>
                 <h2>Perfil</h2>
                 <div>
                     <img src="img/image 4.png" alt="Icono de Usuario" class="icon">
@@ -103,18 +103,18 @@
                     <label>Correo Electronico</label>
                     <input type="email" name="mail" id="mail_perfil" class="input-perfil" readonly>
                     <label>Deseas cambiar tu contraseña?</label>
-                    <a id="btn_cambiar_pwd" href="javascript:void(0);">Cambiar</a>
+                    <a id="btn_cambiar_pwd" href="javascript:void(0);">Cambiar Contraseña</a>
                     <button type="submit" class="login-btn">Cerrar Sesión</button>
                 </form>
-                
+            </div>
         </section>
 
         <!--Cambiar Contraseña-->
         <section id="cambiar" class="ocultar">
+            <div class="btn-volver volver_perfil">
+                <a href="#" class="flecha"><i class="bi bi-arrow-left-circle-fill"></i></a>
+            </div>
             <div class="login-container">
-                <div class="btn-volver volver_perfil">
-                    <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
-                </div>
                 <h2>Cambiar Contraseña</h2>
                 <form id="cambiar_contraseña">
                     <input type="password" class="input" id="pwd_vieja" placeholder="Contraseña actual" readonly>
@@ -238,15 +238,16 @@
 <div class="container">
     <div class="header">
         <div class="btn-volver volver_home">
-            <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
+            <a href="#" class="flecha"><i class="bi bi-arrow-left-circle-fill"></i></a>
         </div>
         <span class="date-title" id="dateTitle">13 Sept. 2022</span>
     </div>
     <div class="calendar">
         <div class="calendar-header">
             <div class="month-nav">
-                <select id="monthSelect"></select>
                 <select id="yearSelect"></select>
+                <select id="monthSelect"></select>
+                
             </div>
         </div>
         <div class="weekdays">
@@ -262,45 +263,47 @@
         </section>
 
         <!--Agregar reserva-->
-        <section id="agregar-reserva" class="ocultar">
+        <section id="agregar-reserva" class="">
             <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
-<div class="calendar-container">
-    <div class="header">
-        <div class="btn-volver volver_reservas">
-            <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
-        </div>
-        <div class="month-year">
-            <select id="monthSelect"></select>
-            <select id="yearSelect"></select>
-        </div>
-    </div>
-    <div class="calendar">
-        <div class="weekdays">
-            <div>Mo</div>
-            <div>Tu</div>
-            <div>We</div>
-            <div>Th</div>
-            <div>Fr</div>
-            <div>Sa</div>
-            <div>Su</div>
-        </div>
-        <div class="days" id="calendarDays"></div>
-    </div>
-    <div class="reservation">
-        <div class="date-range" id="dateRange">
-            <!-- Date range will be populated by JavaScript -->
-        </div>
-        <div class="pax">
-            <div class="pax-label">PAX:</div>
-        <div class="pax-selector">
-                <button class="pax-button" id="menos">-</button>
-                <span class="pax-count" id="paxCount">1</span>
-                <button class="pax-button" id="mas">+</button>
-            </div>
-        </div>
-        <button class="confirm-button" id="btn-agregar-reserva">Confirmar reserva</button>
-    </div>
-</div>
+                <div class="calendar-container">
+                    <div class="header">
+                        <div class="btn-volver volver_reservas">
+                            <a href="#" class="flecha"><i class="bi bi-arrow-left-circle-fill"></i></a>
+                        </div>
+                    </div>
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <div class="month-year">
+                                <select id="mSelect"></select>
+                                <select id="ySelect"></select>
+                            </div>
+                        </div>
+                        <div class="weekdays">
+                            <div>Mo</div>
+                            <div>Tu</div>
+                            <div>We</div>
+                            <div>Th</div>
+                            <div>Fr</div>
+                            <div>Sa</div>
+                            <div>Su</div>
+                        </div>
+                        <div class="days" id="calendarDays"></div>
+                    </div>
+                    <div class="reservation">
+                        <div class="date-range" id="dateRange">
+                            <!-- Date range will be populated by JavaScript -->
+                        </div>
+                        <div class="pax">
+                            <div class="pax-label">PAX:</div>
+                        <div class="pax-selector">
+                                <button class="pax-button" id="menos">-</button>
+                                <span class="pax-count" id="paxCount">1</span>
+                                <button class="pax-button" id="mas">+</button>
+                            </div>
+                        </div>
+                        <button class="confirm-button" id="btn-agregar-reserva">Confirmar reserva</button>
+                    </div>
+                </div>
         </section>
 
         <!--Comentarios-->  
@@ -308,7 +311,7 @@
             <div class="container">
                 <div class="header">
                     <div class="btn-volver volver_home">
-                        <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
+                        <a href="#" class="flecha"><i class="bi bi-arrow-left-circle-fill"></i></a>
                     </div>
                     <div class="title">Comentarios</div>
                 </div>
@@ -324,7 +327,7 @@
             <div class="container">
                 <div class="header">
                     <div class="btn-volver volver_home">
-                        <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
+                        <a href="#" class="flecha"><i class="bi bi-arrow-left-circle-fill"></i></a>
                     </div>
                     <div class="title">Ubicación</div>
                 </div>
@@ -340,7 +343,7 @@
             <div class="container">
                 <div class="header">
                     <div class="btn-volver volver_home">
-                        <a href="#" class="flecha"><i class="bi bi-arrow-left-circle"></i></a>
+                        <a href="#" class="flecha"><i class="bi bi-arrow-left-circle-fill"></i></a>
                     </div>
                     <div class="title">Contáctanos</div>
                 </div>

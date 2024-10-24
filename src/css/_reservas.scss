@@ -1,17 +1,19 @@
-#reservas{
+#reservas
+{
     justify-content: center;
     align-items: center;
+    
   }        
   .container {
-              width: 400px;
-              height: 100vh;
+              width: 45vh;
+              height: 100%;
               background-color: white;
           }
           .header {
               padding: 10px;
               background-color: #fff;
               display: flex;
-              align-items: center;
+              justify-content: center;
           }
           .back-button {
               background: none;
@@ -20,13 +22,67 @@
               cursor: pointer;
           }
           .date-title {
-              margin-left: 20px;
-              font-size: 18px;
+              margin-left: 50px;
+              font-size: 30px;
               font-weight: bold;
           }
           .calendar {
               padding: 10px;
+              margin-top: 10vh;
           }
+
+            .calendar-header {
+                display: flex;
+                justify-content: center;
+                font-weight: bold;
+                margin-bottom: 30px;
+            }
+
+            .month-nav {
+                position: relative;
+                display: flex;
+                justify-content: center;
+                margin-right: 10px;
+                gap: 10px;
+            }
+            
+            select{
+                width: 100%;
+                padding: 5px 10px;
+                font-size: 16px;
+                font-family: $tipo_letra;
+                font-weight: bold;
+                color: #333;
+                background-color: #f4f4f4;
+                border: 2px solid #ccc;
+                border-radius: 8px;
+                appearance: none; /* Elimina la flecha por defecto */
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            select:hover {
+                border-color: #888;
+            }
+            
+            select:focus {
+                outline: none;
+                border-color: $fondo_btn; /* Color de foco (azul en este caso) */
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Sombra alrededor del input */
+            }
+            
+            /* Estilos para el pseudo-elemento de la flecha */
+            .select::after {
+                content: '▼'; /* Flecha hacia abajo */
+                position: absolute;
+                top: 50%;
+                right: 12px;
+                transform: translateY(-50%);
+                pointer-events: none;
+                color: #555;
+                font-size: 14px;
+            }
+
           .weekdays {
               display: grid;
               grid-template-columns: repeat(7, 1fr);
@@ -82,7 +138,7 @@
               width: 50px;
               height: 50px;
               border-radius: 50%;
-              background-color: #4CAF50;
+              background-color: $fondo_btn;
               color: white;
               border: none;
               font-size: 24px;

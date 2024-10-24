@@ -18,9 +18,9 @@ function init() {
     eliminarPlaceholder();
 
     // Cargar la sección "login" después de 3 segundos
-    setTimeout(() => {
+    /*setTimeout(() => {
         cargarSeccion("login");
-    }, 1000);
+    }, 1000);*/
 }
 
 // Función para inicializar el carrusel
@@ -232,32 +232,39 @@ inputs.forEach(input => {
 }
 
 //Funcionalidad para la sección de reservas 
-function initCalendar() {
-    const calendarDays = document.getElementById('calendar-days');
-    const dateTitle = document.getElementById('dateTitle');
-    const eventList = document.getElementById('eventList');
-    const monthSelect = document.getElementById('monthSelect');
-    const yearSelect = document.getElementById('yearSelect');
+const ViewReservationsSection = {
+    elements: {
+        calendarDays: document.getElementById('calendar-days'),
+        dateTitle: document.getElementById('dateTitle'),
+        eventList: document.getElementById('eventList'),
+        monthSelect: document.getElementById('monthSelect'),
+        yearSelect: document.getElementById('yearSelect')
+    },
 
-    let currentDate = new Date();
-    let displayedMonth = currentDate.getMonth();
-    let displayedYear = currentDate.getFullYear();
-    let check_in = '';
-    let check_out = '';
-    let pax = 0;
+    state: {
+        currentDate: new Date(),
+        displayedMonth: new Date().getMonth(),
+        displayedYear: new Date().getFullYear()
+    },
 
-    function updateDateTitle(date) {
-        const options = { day: 'numeric', month: 'short', year: 'numeric' };
-        dateTitle.textContent = date.toLocaleDateString('en-US', options);
-    }
+    initialize() {
+        this.populateMonthYearDropdowns();
+        this.initializeEventListeners();
+        this.updateDateTitle(this.state.currentDate);
+        this.generateCalendar(this.state.displayedYear, this.state.displayedMonth);
+    },
 
-    function populateMonthYearDropdowns() {
-        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    populateMonthYearDropdowns() {
+        if (!this.elements.monthSelect || !this.elements.yearSelect) return;
+
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+        
         months.forEach((month, index) => {
             const option = document.createElement('option');
             option.value = index;
             option.textContent = month;
-            monthSelect.appendChild(option);
+            this.elements.monthSelect.appendChild(option);
         });
 
         const currentYear = new Date().getFullYear();
@@ -265,293 +272,390 @@ function initCalendar() {
             const option = document.createElement('option');
             option.value = year;
             option.textContent = year;
-            yearSelect.appendChild(option);
+            this.elements.yearSelect.appendChild(option);
         }
 
-        monthSelect.value = displayedMonth;
-        yearSelect.value = displayedYear;
-    }
+        this.elements.monthSelect.value = this.state.displayedMonth;
+        this.elements.yearSelect.value = this.state.displayedYear;
+    },
 
-    function generateCalendar(year, month) {
-        calendarDays.innerHTML = '';
+    generateCalendar(year, month) {
+        if (!this.elements.calendarDays) return;
+        this.elements.calendarDays.innerHTML = '';
+
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
         for (let i = 0; i < (firstDay + 6) % 7; i++) {
-            calendarDays.appendChild(document.createElement('div'));
+            this.elements.calendarDays.appendChild(document.createElement('div'));
         }
 
         for (let day = 1; day <= daysInMonth; day++) {
             const dayElement = document.createElement('div');
             dayElement.textContent = day;
             dayElement.classList.add('day');
-            dayElement.id = 'selectedDay';
 
-            if (day === currentDate.getDate() && month === currentDate.getMonth() && year === currentDate.getFullYear()) {
+            if (day === this.state.currentDate.getDate() && 
+                month === this.state.currentDate.getMonth() && 
+                year === this.state.currentDate.getFullYear()) {
                 dayElement.classList.add('today');
             }
 
-            if (day === currentDate.getDate() && month === displayedMonth && year === displayedYear) {
-                dayElement.classList.add('selected');
-            }
-
             dayElement.addEventListener('click', () => {
-                currentDate = new Date(year, month, day);
-                updateDateTitle(currentDate);
-                generateCalendar(year, month);
-                updateEventList(currentDate);
+                this.state.currentDate = new Date(year, month, day);
+                this.updateDateTitle(this.state.currentDate);
+                this.generateCalendar(year, month);
+                this.updateEventList(this.state.currentDate);
             });
 
-            calendarDays.appendChild(dayElement);
+            this.elements.calendarDays.appendChild(dayElement);
         }
-    }
 
-    function updateEventList(user, check_in, check_out, pax) {
-        eventList.innerHTML = ''; // Limpiar la lista de eventos
-        const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-        
-        if(check_in !== undefined && check_out !== undefined){
-            
-        const fecha = check_in.split(' ')[1].split('-');
-        const fecha_book = new Date(fecha[2], fecha[1], fecha[0]);
-        alert(currentDate.getDate())
-        
-        eventList.innerHTML = '';
-        if (currentDate.getDate() === fecha_book.getDate()  && currentDate.getMonth() === fecha_book.getMonth()-1 && currentDate.getFullYear() === fecha_book.getFullYear()) {
+        this.updateEventList(this.state.currentDate);
+    },
+
+    updateDateTitle(date) {
+        if (!this.elements.dateTitle) return;
+        const options = { day: 'numeric', month: 'short', year: 'numeric' };
+        this.elements.dateTitle.textContent = date.toLocaleDateString('en-US', options);
+    },
+
+    updateEventList(date) {
+        if (!this.elements.eventList) return;
+        this.elements.eventList.innerHTML = '';
+
+        const bookings = BookingManager.getBookings();
+        const dateStr = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+
+        const dayBookings = bookings.filter(booking => {
+            const bookingDate = booking.check_in.split(' ')[1];
+            return bookingDate === dateStr;
+        });
+
+        dayBookings.forEach(booking => {
             const event = document.createElement('div');
             event.className = 'event';
             event.innerHTML = `
                 <div class="event-icon">👤</div>
                 <div class="event-info">
-                    <div>Sr. ${user}</div>
-                    <div>${check_in}</div>
-                    <div>${check_out}</div>
-                    <div>PAX: ${pax}</div>
+                    <div>Sr. ${booking.user}</div>
+                    <div>${booking.check_in}</div>
+                    <div>${booking.check_out}</div>
+                    <div>PAX: ${booking.pax}</div>
                     <div class="icons">
                         <i class="fas fa-trash-alt"></i>
                         <i class="fas fa-edit"></i>
                     </div>
                 </div>
             `;
-            alert("llegué")
-            eventList.appendChild(event);
-        }
+            this.elements.eventList.appendChild(event);
+        });
+    },
+
+    initializeEventListeners() {
+        this.elements.monthSelect?.addEventListener('change', () => {
+            this.state.displayedMonth = parseInt(this.elements.monthSelect.value);
+            this.generateCalendar(this.state.displayedYear, this.state.displayedMonth);
+        });
+
+        this.elements.yearSelect?.addEventListener('change', () => {
+            this.state.displayedYear = parseInt(this.elements.yearSelect.value);
+            this.generateCalendar(this.state.displayedYear, this.state.displayedMonth);
+        });
     }
-    }
-
-    function loadBookings() {
-        btn_reservas.addEventListener('click', () =>{
-            const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
-            const user = usuario_logueado.user
-            const bookings = JSON.parse(localStorage.getItem('bookings')) || []
-            books = bookings.filter(booking => booking.user === user)
-        
-            if(books.length > 0){
-                books.forEach(booking => {
-                    if(booking.check_in != undefined && booking.check_out != undefined){
-                    check_in = booking.check_in
-                    check_out = booking.check_out
-                    pax = booking.pax
-                     updateEventList(booking.user, booking.check_in, booking.check_out, booking.pax)
-                    }
-                });
-            }
-            else{
-                return Swal.fire({
-                    title: 'Error!',
-                    text: 'No hay reservas',
-                    icon: 'error',
-                  })
-            }
-            })
-        }
-
-        const btn_agregar_reserva = document.getElementById('btn-agregar-reserva')
-btn_agregar_reserva.addEventListener('click', () =>{
-    const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
-    const check_in = document.getElementById('check-in')
-    const check_out = document.getElementById('check-out')
-    const pax = document.getElementById('paxCount');
-    const user = usuario_logueado.user;
-
-    const bookings = JSON.parse(localStorage.getItem('bokings')) || []
-
-    if (check_in === null || check_out === null){
-        return Swal.fire({
-            title: 'Error!',
-            text: 'Seleccione las fechas',
-            icon: 'error',
-            })
-    }
-    else {
-        
-        if (bookings.find(booking => booking.check_in === check_in.textContent)){
-        return Swal.fire({
-            title: 'Error!',
-            text: 'Ya hay una reserva para esas fechas',
-            icon: 'error',
-            })}
-    else{
-        bookings.push({user: user, check_in: check_in.textContent, check_out:check_out.textContent, pax: pax.textContent})
-        localStorage.setItem('bookings', JSON.stringify(bookings))
-        Swal.fire({
-            title: 'exito!',
-            text: 'Reserva exitosa',
-            icon: 'success',
-          })
-
-        loadBookings();
-        cargarSeccion('reservas');
-    }   
-    
-    }
-    
-});
-    
-
-    monthSelect.addEventListener('change', () => {
-        displayedMonth = parseInt(monthSelect.value);
-        generateCalendar(displayedYear, displayedMonth);
-    });
-
-    yearSelect.addEventListener('change', () => {
-        displayedYear = parseInt(yearSelect.value);
-        generateCalendar(displayedYear, displayedMonth);
-    });
-
-    populateMonthYearDropdowns();
-    updateDateTitle(currentDate);
-    generateCalendar(displayedYear, displayedMonth);
-    loadBookings();
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCalendar);
-} else {
-    initCalendar();
-}
+};
 
 
 // Funcionalidad para la sección de agregar reserva
-const today = dayjs();
-        let currentMonth = today;
-        let startDate = null;
-        let endDate = null;
-        let pax = 1;
+// Shared utility functions and classes
+class BookingManager {
+    static getBookings() {
+        return JSON.parse(localStorage.getItem('bookings')) || [];
+    }
 
-        function renderCalendar() {
-            const calendarDays = document.getElementById('calendarDays');
-            calendarDays.innerHTML = '';
+    static addBooking(booking) {
+        const bookings = this.getBookings();
+        
+        // Convertir las fechas de la nueva reserva a objetos dayjs
+        const newCheckIn = dayjs(booking.check_in.split(' ')[1], 'DD-MM-YYYY');
+        const newCheckOut = dayjs(booking.check_out.split(' ')[1], 'DD-MM-YYYY');
+        
+        // Verificar si hay conflicto con alguna reserva existente
+        const hasConflict = bookings.some(existingBooking => {
+            const existingCheckIn = dayjs(existingBooking.check_in.split(' ')[1], 'DD-MM-YYYY');
+            const existingCheckOut = dayjs(existingBooking.check_out.split(' ')[1], 'DD-MM-YYYY');
+            
+            // Verifica todas las posibles formas de solapamiento:
+            // 1. La nueva reserva comienza durante una existente
+            // 2. La nueva reserva termina durante una existente
+            // 3. La nueva reserva engloba completamente una existente
+            // 4. La nueva reserva está completamente dentro de una existente
+            return (
+                // Nueva reserva comienza durante una existente
+                (newCheckIn.isSameOrAfter(existingCheckIn) && newCheckIn.isBefore(existingCheckOut)) ||
+                // Nueva reserva termina durante una existente
+                (newCheckOut.isAfter(existingCheckIn) && newCheckOut.isSameOrBefore(existingCheckOut)) ||
+                // Nueva reserva engloba una existente
+                (newCheckIn.isBefore(existingCheckIn) && newCheckOut.isAfter(existingCheckOut))
+            );
+        });
 
-            const firstDay = currentMonth.startOf('month').day();
-            const daysInMonth = currentMonth.daysInMonth();
-
-            for (let i = 0; i < firstDay; i++) {
-                calendarDays.appendChild(document.createElement('div'));
-            }
-
-            for (let i = 1; i <= daysInMonth; i++) {
-                const day = document.createElement('div');
-                day.classList.add('day');
-                day.textContent = i;
-                day.onclick = () => selectDate(i);
-                const currentDate = currentMonth.date(i);
-                if (startDate && currentDate.isSame(startDate, 'day')) {
-                    day.classList.add('selected');
-                }
-                if (endDate && currentDate.isSame(endDate, 'day')) {
-                    day.classList.add('selected');
-                }
-                if (startDate && endDate && currentDate.isAfter(startDate) && currentDate.isBefore(endDate)) {
-                    day.classList.add('in-range');
-                }
-                calendarDays.appendChild(day);
-            }
-
-            updateDateRange();
+        if (hasConflict) {
+            throw new Error('Ya existe una reserva para estas fechas');
         }
 
-        function selectDate(day) {
-            const selectedDate = currentMonth.date(day);
-            if (!startDate || (startDate && endDate)) {
-                startDate = selectedDate;
-                endDate = null;
-            } else if (selectedDate.isAfter(startDate)) {
-                endDate = selectedDate;
-            } else {
-                endDate = startDate;
-                startDate = selectedDate;
-            }
-            renderCalendar();
+        // Si no hay conflictos, agregar la reserva
+        bookings.push(booking);
+        localStorage.setItem('bookings', JSON.stringify(bookings));
+    }
+
+    static isDateRangeAvailable(startDate, endDate) {
+        const bookings = this.getBookings();
+        
+        // Convertir las fechas a verificar a objetos dayjs
+        const checkIn = dayjs(startDate);
+        const checkOut = dayjs(endDate);
+        
+        // Verificar si hay conflicto con alguna reserva existente
+        const hasConflict = bookings.some(existingBooking => {
+            const existingCheckIn = dayjs(existingBooking.check_in.split(' ')[1], 'DD-MM-YYYY');
+            const existingCheckOut = dayjs(existingBooking.check_out.split(' ')[1], 'DD-MM-YYYY');
+            
+            return (
+                (checkIn.isSameOrAfter(existingCheckIn) && checkIn.isBefore(existingCheckOut)) ||
+                (checkOut.isAfter(existingCheckIn) && checkOut.isSameOrBefore(existingCheckOut)) ||
+                (checkIn.isBefore(existingCheckIn) && checkOut.isAfter(existingCheckOut))
+            );
+        });
+
+        return !hasConflict;
+    }
+}
+// Section 1: Add Reservations (agregar-reserva)
+const AddReservationSection = {
+    elements: {
+        calendarDays: document.getElementById('calendarDays'),
+        dateRange: document.getElementById('dateRange'),
+        monthSelect: document.getElementById('mSelect'),
+        yearSelect: document.getElementById('ySelect'),
+        paxCount: document.getElementById('paxCount'),
+        menosBtn: document.getElementById('menos'),
+        masBtn: document.getElementById('mas'),
+        confirmBtn: document.getElementById('btn-agregar-reserva')
+    },
+
+    state: {
+        today: dayjs(),
+        currentMonth: dayjs(),
+        startDate: null,
+        endDate: null,
+        pax: 1
+    },
+
+    initialize() {
+        this.initializeMonthYearSelects();
+        this.initializeEventListeners();
+        this.renderCalendar();
+    },
+
+    initializeMonthYearSelects() {
+        if (!this.elements.monthSelect || !this.elements.yearSelect) return;
+
+        const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        
+        months.forEach((month, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = month;
+            this.elements.monthSelect.appendChild(option);
+        });
+
+        const currentYear = this.state.today.year();
+        for (let year = currentYear; year <= currentYear + 5; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            this.elements.yearSelect.appendChild(option);
         }
 
-        function updateDateRange() {
-            const dateRange = document.getElementById('dateRange');
-            dateRange.innerHTML = '';
-            if (startDate) {
-                const checkIn = document.createElement('div');
-                checkIn.id = 'check-in';
-                checkIn.textContent = `Check-in: ${startDate.format('DD-MM-YYYY'+ ' 12:00')}`;
-                dateRange.appendChild(checkIn);
-            }
-            if (endDate) {
-                const checkOut = document.createElement('div');
-                checkOut.id = 'check-out';
-                checkOut.textContent = `Check-out: ${endDate.add(1, 'day').format('DD-MM-YYYY' + ' 3:00')}`;
-                dateRange.appendChild(checkOut);
-            }
-            if (!startDate && !endDate) {
-                dateRange.textContent = 'Seleccione el numero de dias';
-            }
+        this.elements.monthSelect.value = this.state.currentMonth.month();
+        this.elements.yearSelect.value = this.state.currentMonth.year();
+    },
+
+    renderCalendar() {
+        if (!this.elements.calendarDays) return;
+        this.elements.calendarDays.innerHTML = '';
+
+        const firstDayOfMonth = this.state.currentMonth.startOf('month').day();
+        const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+        const daysInMonth = this.state.currentMonth.daysInMonth();
+
+        // Add empty cells for days before first day of month
+        for (let i = 0; i < adjustedFirstDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.classList.add('empty-day');
+            this.elements.calendarDays.appendChild(emptyDay);
         }
 
-        const menos = document.getElementById('menos');
-        const mas = document.getElementById('mas');
-        menos.addEventListener('click', () => changePax(-1));
-        mas.addEventListener('click', () => changePax(1));
-
-        function changePax(delta) {
-            pax = Math.max(1, pax + delta);
-            document.getElementById('paxCount').textContent = pax;
+        // Create calendar days
+        for (let i = 1; i <= daysInMonth; i++) {
+            const day = document.createElement('div');
+            day.classList.add('day');
+            day.textContent = i;
+            
+            const currentDate = this.state.currentMonth.date(i);
+            this.addDayClasses(day, currentDate);
+            
+            day.onclick = () => this.selectDate(i);
+            this.elements.calendarDays.appendChild(day);
         }
 
-        function populateMonthYearSelects() {
-            const monthSelect = document.getElementById('monthSelect');
-            const yearSelect = document.getElementById('yearSelect');
+        this.updateDateRange();
+    },
 
-            const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            months.forEach((month, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = month;
-                monthSelect.appendChild(option);
+    addDayClasses(dayElement, date) {
+        if (this.state.startDate && date.isSame(this.state.startDate, 'day')) {
+            dayElement.classList.add('selected', 'start-date');
+        }
+        if (this.state.endDate && date.isSame(this.state.endDate, 'day')) {
+            dayElement.classList.add('selected', 'end-date');
+        }
+        if (this.state.startDate && this.state.endDate && 
+            date.isAfter(this.state.startDate) && date.isBefore(this.state.endDate)) {
+            dayElement.classList.add('in-range');
+        }
+        if (date.isBefore(this.state.today, 'day')) {
+            dayElement.classList.add('disabled');
+            dayElement.onclick = null;
+        }
+    },
+
+    selectDate(day) {
+        const selectedDate = this.state.currentMonth.date(day);
+        
+        if (selectedDate.isBefore(this.state.today, 'day')) return;
+
+        if (!this.state.startDate || (this.state.startDate && this.state.endDate)) {
+            this.state.startDate = selectedDate;
+            this.state.endDate = null;
+        } else if (selectedDate.isAfter(this.state.startDate)) {
+            this.state.endDate = selectedDate;
+        } else {
+            this.state.endDate = this.state.startDate;
+            this.state.startDate = selectedDate;
+        }
+        
+        this.renderCalendar();
+    },
+
+    updateDateRange() {
+        if (!this.elements.dateRange) return;
+        this.elements.dateRange.innerHTML = '';
+
+        if (this.state.startDate) {
+            const checkIn = document.createElement('div');
+            checkIn.id = 'check-in';
+            checkIn.textContent = `Check-in: ${this.state.startDate.format('DD-MM-YYYY')} 12:00`;
+            this.elements.dateRange.appendChild(checkIn);
+        }
+
+        if (this.state.endDate) {
+            const checkOut = document.createElement('div');
+            checkOut.id = 'check-out';
+            checkOut.textContent = `Check-out: ${this.state.endDate.format('DD-MM-YYYY')} 03:00`;
+            this.elements.dateRange.appendChild(checkOut);
+        }
+    },
+
+    initializeEventListeners() {
+        this.elements.monthSelect?.addEventListener('change', () => {
+            this.state.currentMonth = dayjs()
+                .year(parseInt(this.elements.yearSelect.value))
+                .month(parseInt(this.elements.monthSelect.value));
+            this.renderCalendar();
+        });
+
+        this.elements.yearSelect?.addEventListener('change', () => {
+            this.state.currentMonth = dayjs()
+                .year(parseInt(this.elements.yearSelect.value))
+                .month(parseInt(this.elements.monthSelect.value));
+            this.renderCalendar();
+        });
+
+        this.elements.menosBtn?.addEventListener('click', () => {
+            this.state.pax = Math.max(1, this.state.pax - 1);
+            this.elements.paxCount.textContent = this.state.pax;
+        });
+
+        this.elements.masBtn?.addEventListener('click', () => {
+            this.state.pax = Math.min(10, this.state.pax + 1);
+            this.elements.paxCount.textContent = this.state.pax;
+        });
+
+        this.elements.confirmBtn?.addEventListener('click', () => this.handleReservationConfirm());
+    },
+
+    handleReservationConfirm() {
+        const usuario = JSON.parse(localStorage.getItem('logueo_exitoso')) || {};
+        
+        if (!this.state.startDate || !this.state.endDate) {
+            return Swal.fire({
+                title: 'Error!',
+                text: 'Seleccione las fechas',
+                icon: 'error',
             });
-
-            const currentYear = today.year();
-            for (let year = currentYear; year <= currentYear + 5; year++) {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                yearSelect.appendChild(option);
-            }
-
-            monthSelect.value = currentMonth.month();
-            yearSelect.value = currentMonth.year();
-
-            monthSelect.onchange = updateMonth;
-            yearSelect.onchange = updateMonth;
         }
 
-        function updateMonth() {
-            const monthSelect = document.getElementById('monthSelect');
-            const yearSelect = document.getElementById('yearSelect');
-            currentMonth = dayjs().year(parseInt(yearSelect.value)).month(parseInt(monthSelect.value));
-            renderCalendar();
+        try {
+            const newBooking = {
+                user: usuario.user,
+                check_in: `Check-in: ${this.state.startDate.format('DD-MM-YYYY')} 12:00`,
+                check_out: `Check-out: ${this.state.endDate.format('DD-MM-YYYY')} 03:00`,
+                pax: this.state.pax
+            };
+
+            BookingManager.addBooking(newBooking);
+
+            Swal.fire({
+                title: 'Éxito!',
+                text: 'Reserva exitosa',
+                icon: 'success',
+            }).then(() => {
+                // Limpiar el estado
+                this.state.startDate = null;
+                this.state.endDate = null;
+                this.state.pax = 1;
+                
+                // Actualizar la UI
+                this.elements.paxCount.textContent = '1';
+                this.renderCalendar();
+                
+                // Cambiar a la sección de reservas
+                cargarSeccion('reservas');
+            });
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: error.message,
+                icon: 'error',
+            });
         }
+    }
+};
 
-        populateMonthYearSelects();
-        renderCalendar();
-
+// Initialize both sections when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Add Reservation section
+    if (document.getElementById('agregar-reserva')) {
+        AddReservationSection.initialize();
+    }
+    
+    // Initialize View Reservations section
+    if (document.getElementById('reservas')) {
+        ViewReservationsSection.initialize();
+    }
+});
 
 
 //Registro con localstorage
@@ -730,7 +834,7 @@ cambiar_pwd_form.addEventListener('submit', (e) =>{
 //Funcionalidad para la seccion de reserva
 
 
-/*const btn_reservas = document.getElementById('selectedDay')
+const btn_reservas = document.getElementById('selectedDay')
 if(btn_reservas){
     btn_reservas.addEventListener('click', () =>{
         const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
@@ -751,7 +855,7 @@ if(btn_reservas){
           })
     }
     })
-}*/  
+}
 
 //Funcionalidad para la seccion de agregar reserva
 

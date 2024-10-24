@@ -10,8 +10,8 @@
 .calendar-container {
 
     background-color: white;
-    width: 400px;
-    height: 100vh;
+    width: 45vh;
+    height: 100%;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     font-family: $tipo_letra;
@@ -34,14 +34,40 @@
 .month-year select {
     padding: 5px 10px;
     font-size: 16px;
-    border: none;
-    background-color: transparent;
-    color: #007bff;
-    font-weight: bold;
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+}
+
+#mSelect {
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-family: $tipo_letra;
+    font-weight: bold;
+    color: $fondo_btn;
+    background-color: #f4f4f4;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#ySelect {
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-family: $tipo_letra;
+    font-weight: bold;
+    color: $fondo_negro;
+    background-color: #f4f4f4;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .calendar {
@@ -86,7 +112,7 @@
 .day.in-range {
     background-color: #dcedc8;
 }
-
+ 
 .reservation {
     padding: 20px;
     border-top: 1px solid #e0e0e0;
