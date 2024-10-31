@@ -18,9 +18,10 @@ function init() {
     eliminarPlaceholder();
 
     // Cargar la sección "login" después de 3 segundos
-    /*setTimeout(() => {
+    setTimeout(() => {
+        refs["splash"].classList.add("ocultar");
         cargarSeccion("login");
-    }, 1000);*/
+    }, 1000);
 }
 
 // Función para inicializar el carrusel
@@ -244,7 +245,8 @@ const ViewReservationsSection = {
     state: {
         currentDate: new Date(),
         displayedMonth: new Date().getMonth(),
-        displayedYear: new Date().getFullYear()
+        displayedYear: new Date().getFullYear(),
+        editingBookingIndex: null
     },
 
     initialize() {
@@ -257,8 +259,8 @@ const ViewReservationsSection = {
     populateMonthYearDropdowns() {
         if (!this.elements.monthSelect || !this.elements.yearSelect) return;
 
-        const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                       'July', 'August', 'September', 'October', 'November', 'December'];
+        const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         
         months.forEach((month, index) => {
             const option = document.createElement('option');
@@ -332,7 +334,7 @@ const ViewReservationsSection = {
             return bookingDate === dateStr;
         });
 
-        dayBookings.forEach(booking => {
+        dayBookings.forEach((booking, index) => {
             const event = document.createElement('div');
             event.className = 'event';
             event.innerHTML = `
@@ -343,13 +345,146 @@ const ViewReservationsSection = {
                     <div>${booking.check_out}</div>
                     <div>PAX: ${booking.pax}</div>
                     <div class="icons">
-                        <i class="fas fa-trash-alt"></i>
-                        <i class="fas fa-edit"></i>
+                        <button class="edit-btn" data-index="${index}">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="delete-btn" data-index="${index}">
+                            <i class="bi bi-trash"></i></i>
+                        </button>
                     </div>
                 </div>
             `;
+
+            const deleteBtn = event.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', () => this.handleDeleteBooking(index));
+
+            const editBtn = event.querySelector('.edit-btn');
+            editBtn.addEventListener('click', () => this.handleEditBooking(index));
+
             this.elements.eventList.appendChild(event);
         });
+    },
+
+    handleDeleteBooking(index) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "No podrás revertir esta acción",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const deleted = BookingManager.deleteBooking(index);
+                if (deleted) {
+                    Swal.fire(
+                        '¡Eliminado!',
+                        'La reserva ha sido eliminada.',
+                        'success'
+                    );
+                    this.updateEventList(this.state.currentDate);
+                } else {
+                    Swal.fire(
+                        'Error',
+                        'No se pudo eliminar la reserva.',
+                        'error'
+                    );
+                }
+            }
+        });
+    },
+
+    handleEditBooking(index) {
+        const bookings = BookingManager.getBookings();
+        const booking = bookings[index];
+        if (!booking) return;
+
+        // Extraer fechas del booking
+        const checkInDate = booking.check_in.match(/(\d{2}-\d{2}-\d{4})/)[1];
+        const checkOutDate = booking.check_out.match(/(\d{2}-\d{2}-\d{4})/)[1];
+
+        Swal.fire({
+            title: 'Editar Reserva',
+            html: `
+                <div class="edit-booking-form">
+                    <div class="form-group">
+                        <label>Check-in:</label>
+                        <input type="date" id="edit-check-in" 
+                               value="${this.formatDateForInput(checkInDate)}" class="swal2-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Check-out:</label>
+                        <input type="date" id="edit-check-out" 
+                               value="${this.formatDateForInput(checkOutDate)}" class="swal2-input">
+                    </div>
+                    <div class="form-group">
+                        <label>PAX:</label>
+                        <input type="number" id="edit-pax" value="${booking.pax}" 
+                               min="1" max="10" class="swal2-input">
+                    </div>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Guardar',
+            cancelButtonText: 'Cancelar',
+            preConfirm: () => {
+                const checkIn = document.getElementById('edit-check-in').value;
+                const checkOut = document.getElementById('edit-check-out').value;
+                const pax = document.getElementById('edit-pax').value;
+
+                if (!checkIn || !checkOut || !pax) {
+                    Swal.showValidationMessage('Por favor completa todos los campos');
+                    return false;
+                }
+
+                return {
+                    checkIn: this.formatDateForStorage(checkIn),
+                    checkOut: this.formatDateForStorage(checkOut),
+                    pax: parseInt(pax)
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const updatedBooking = {
+                    ...booking,
+                    check_in: `Check-in: ${result.value.checkIn} 12:00`,
+                    check_out: `Check-out: ${result.value.checkOut} 03:00`,
+                    pax: result.value.pax
+                };
+
+                try {
+                    const updated = BookingManager.updateBooking(index, updatedBooking);
+                    if (updated) {
+                        Swal.fire(
+                            '¡Actualizado!',
+                            'La reserva ha sido actualizada.',
+                            'success'
+                        );
+                        this.updateEventList(this.state.currentDate);
+                    }
+                } catch (error) {
+                    Swal.fire(
+                        'Error',
+                        error.message,
+                        'error'
+                    );
+                }
+            }
+        });
+    },
+
+    formatDateForInput(dateStr) {
+        // Convertir DD-MM-YYYY a YYYY-MM-DD para input type="date"
+        const [day, month, year] = dateStr.split('-');
+        return `${year}-${month}-${day}`;
+    },
+
+    formatDateForStorage(dateStr) {
+        // Convertir YYYY-MM-DD a DD-MM-YYYY
+        const [year, month, day] = dateStr.split('-');
+        return `${day}-${month}-${year}`;
     },
 
     initializeEventListeners() {
@@ -373,30 +508,104 @@ class BookingManager {
         return JSON.parse(localStorage.getItem('bookings')) || [];
     }
 
+    static deleteBooking(bookingIndex) {
+        const bookings = this.getBookings();
+        if (bookingIndex >= 0 && bookingIndex < bookings.length) {
+            bookings.splice(bookingIndex, 1);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            return true;
+        }
+        return false;
+    }
+
+    static updateBooking(bookingIndex, updatedBooking) {
+        const bookings = this.getBookings();
+        if (bookingIndex >= 0 && bookingIndex < bookings.length) {
+            // Verificar si las nuevas fechas no coinciden con otras reservas (excluyendo la actual)
+            const otherBookings = bookings.filter((_, index) => index !== bookingIndex);
+            const hasConflict = this.checkDateConflict(updatedBooking, otherBookings);
+            
+            if (hasConflict) {
+                throw new Error('Las fechas seleccionadas se solapan con otra reserva existente');
+            }
+
+            bookings[bookingIndex] = updatedBooking;
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            return true;
+        }
+        return false;
+    }
+
+    static checkDateConflict(booking, existingBookings) {
+        const checkInMatch = booking.check_in.match(/(\d{2}-\d{2}-\d{4})/);
+        const checkOutMatch = booking.check_out.match(/(\d{2}-\d{2}-\d{4})/);
+        
+        if (!checkInMatch || !checkOutMatch) return false;
+
+        const [checkInDay, checkInMonth, checkInYear] = checkInMatch[1].split('-');
+        const [checkOutDay, checkOutMonth, checkOutYear] = checkOutMatch[1].split('-');
+        
+        const newCheckIn = new Date(checkInYear, checkInMonth - 1, checkInDay);
+        const newCheckOut = new Date(checkOutYear, checkOutMonth - 1, checkOutDay);
+
+        return existingBookings.some(existingBooking => {
+            const existingCheckInMatch = existingBooking.check_in.match(/(\d{2}-\d{2}-\d{4})/);
+            const existingCheckOutMatch = existingBooking.check_out.match(/(\d{2}-\d{2}-\d{4})/);
+            
+            if (!existingCheckInMatch || !existingCheckOutMatch) return false;
+            
+            const [existingInDay, existingInMonth, existingInYear] = existingCheckInMatch[1].split('-');
+            const [existingOutDay, existingOutMonth, existingOutYear] = existingCheckOutMatch[1].split('-');
+            
+            const existingCheckIn = new Date(existingInYear, existingInMonth - 1, existingInDay);
+            const existingCheckOut = new Date(existingOutYear, existingOutMonth - 1, existingOutDay);
+            
+            return (
+                (newCheckIn >= existingCheckIn && newCheckIn < existingCheckOut) ||
+                (newCheckOut > existingCheckIn && newCheckOut <= existingCheckOut) ||
+                (newCheckIn <= existingCheckIn && newCheckOut >= existingCheckOut)
+            );
+        });
+    }
+
     static addBooking(booking) {
         const bookings = this.getBookings();
         
-        // Convertir las fechas de la nueva reserva a objetos dayjs
-        const newCheckIn = dayjs(booking.check_in.split(' ')[1], 'DD-MM-YYYY');
-        const newCheckOut = dayjs(booking.check_out.split(' ')[1], 'DD-MM-YYYY');
+        // Extraer las fechas de los strings de check-in y check-out
+        const checkInMatch = booking.check_in.match(/(\d{2}-\d{2}-\d{4})/);
+        const checkOutMatch = booking.check_out.match(/(\d{2}-\d{2}-\d{4})/);
+        
+        if (!checkInMatch || !checkOutMatch) {
+            throw new Error('Formato de fecha inválido');
+        }
+
+        // Convertir las fechas a objetos Date para comparación
+        const [checkInDay, checkInMonth, checkInYear] = checkInMatch[1].split('-');
+        const [checkOutDay, checkOutMonth, checkOutYear] = checkOutMatch[1].split('-');
+        
+        const newCheckIn = new Date(checkInYear, checkInMonth - 1, checkInDay);
+        const newCheckOut = new Date(checkOutYear, checkOutMonth - 1, checkOutDay);
         
         // Verificar si hay conflicto con alguna reserva existente
         const hasConflict = bookings.some(existingBooking => {
-            const existingCheckIn = dayjs(existingBooking.check_in.split(' ')[1], 'DD-MM-YYYY');
-            const existingCheckOut = dayjs(existingBooking.check_out.split(' ')[1], 'DD-MM-YYYY');
+            const existingCheckInMatch = existingBooking.check_in.match(/(\d{2}-\d{2}-\d{4})/);
+            const existingCheckOutMatch = existingBooking.check_out.match(/(\d{2}-\d{2}-\d{4})/);
             
-            // Verifica todas las posibles formas de solapamiento:
-            // 1. La nueva reserva comienza durante una existente
-            // 2. La nueva reserva termina durante una existente
-            // 3. La nueva reserva engloba completamente una existente
-            // 4. La nueva reserva está completamente dentro de una existente
+            if (!existingCheckInMatch || !existingCheckOutMatch) return false;
+            
+            const [existingInDay, existingInMonth, existingInYear] = existingCheckInMatch[1].split('-');
+            const [existingOutDay, existingOutMonth, existingOutYear] = existingCheckOutMatch[1].split('-');
+            
+            const existingCheckIn = new Date(existingInYear, existingInMonth - 1, existingInDay);
+            const existingCheckOut = new Date(existingOutYear, existingOutMonth - 1, existingOutDay);
+            
             return (
                 // Nueva reserva comienza durante una existente
-                (newCheckIn.isSameOrAfter(existingCheckIn) && newCheckIn.isBefore(existingCheckOut)) ||
+                (newCheckIn >= existingCheckIn && newCheckIn < existingCheckOut) ||
                 // Nueva reserva termina durante una existente
-                (newCheckOut.isAfter(existingCheckIn) && newCheckOut.isSameOrBefore(existingCheckOut)) ||
+                (newCheckOut > existingCheckIn && newCheckOut <= existingCheckOut) ||
                 // Nueva reserva engloba una existente
-                (newCheckIn.isBefore(existingCheckIn) && newCheckOut.isAfter(existingCheckOut))
+                (newCheckIn <= existingCheckIn && newCheckOut >= existingCheckOut)
             );
         });
 
@@ -404,7 +613,6 @@ class BookingManager {
             throw new Error('Ya existe una reserva para estas fechas');
         }
 
-        // Si no hay conflictos, agregar la reserva
         bookings.push(booking);
         localStorage.setItem('bookings', JSON.stringify(bookings));
     }
@@ -412,19 +620,27 @@ class BookingManager {
     static isDateRangeAvailable(startDate, endDate) {
         const bookings = this.getBookings();
         
-        // Convertir las fechas a verificar a objetos dayjs
-        const checkIn = dayjs(startDate);
-        const checkOut = dayjs(endDate);
+        // Asegurarse de que las fechas sean objetos Date
+        const checkIn = startDate instanceof Date ? startDate : new Date(startDate);
+        const checkOut = endDate instanceof Date ? endDate : new Date(endDate);
         
         // Verificar si hay conflicto con alguna reserva existente
         const hasConflict = bookings.some(existingBooking => {
-            const existingCheckIn = dayjs(existingBooking.check_in.split(' ')[1], 'DD-MM-YYYY');
-            const existingCheckOut = dayjs(existingBooking.check_out.split(' ')[1], 'DD-MM-YYYY');
+            const existingCheckInMatch = existingBooking.check_in.match(/(\d{2}-\d{2}-\d{4})/);
+            const existingCheckOutMatch = existingBooking.check_out.match(/(\d{2}-\d{2}-\d{4})/);
+            
+            if (!existingCheckInMatch || !existingCheckOutMatch) return false;
+            
+            const [existingInDay, existingInMonth, existingInYear] = existingCheckInMatch[1].split('-');
+            const [existingOutDay, existingOutMonth, existingOutYear] = existingCheckOutMatch[1].split('-');
+            
+            const existingCheckIn = new Date(existingInYear, existingInMonth - 1, existingInDay);
+            const existingCheckOut = new Date(existingOutYear, existingOutMonth - 1, existingOutDay);
             
             return (
-                (checkIn.isSameOrAfter(existingCheckIn) && checkIn.isBefore(existingCheckOut)) ||
-                (checkOut.isAfter(existingCheckIn) && checkOut.isSameOrBefore(existingCheckOut)) ||
-                (checkIn.isBefore(existingCheckIn) && checkOut.isAfter(existingCheckOut))
+                (checkIn >= existingCheckIn && checkIn < existingCheckOut) ||
+                (checkOut > existingCheckIn && checkOut <= existingCheckOut) ||
+                (checkIn <= existingCheckIn && checkOut >= existingCheckOut)
             );
         });
 
@@ -830,35 +1046,22 @@ cambiar_pwd_form.addEventListener('submit', (e) =>{
 
 })
 
-
-//Funcionalidad para la seccion de reserva
-
-
-const btn_reservas = document.getElementById('selectedDay')
-if(btn_reservas){
-    btn_reservas.addEventListener('click', () =>{
-        const usuario_logueado = JSON.parse(localStorage.getItem('logueo_exitoso')) || []
-    const user = usuario_logueado.user
-    const bookings = JSON.parse(localStorage.getItem('bookings')) || []
-    books = bookings.filter(booking => booking.user === user)
-
-    if(books.length > 0){
-        books.forEach(booking => {
-            updateEventList(booking.user, booking.check_in, booking.check_out, booking.pax) 
-        });
-    }
-    else{
-        return Swal.fire({
-            title: 'Error!',
-            text: 'No hay reservas',
-            icon: 'error',
-          })
-    }
-    })
-}
-
-//Funcionalidad para la seccion de agregar reserva
-
+//Funcionalidad para la sección de contacto
+const contactForm = document.getElementById('contactForm'); 
+contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+    const contact = { name, email, message };
+    console.log(contact);
+    Swal.fire({
+        title: 'Mensaje enviado!',
+        text: 'Gracias por contactarnos',
+        icon: 'success',
+      })
+    contactForm.reset();
+});
 
 //Funcionalidad para la sección de comentarios
 const commentsData = [
