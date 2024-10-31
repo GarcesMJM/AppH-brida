@@ -19,7 +19,6 @@ function init() {
 
     // Cargar la sección "login" después de 3 segundos
     setTimeout(() => {
-        refs["splash"].classList.add("ocultar");
         cargarSeccion("login");
     }, 1000);
 }
