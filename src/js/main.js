@@ -1062,26 +1062,32 @@ contactForm.addEventListener('submit', (e) => {
     contactForm.reset();
 });
 
-//Funcionalidad para la sección de comentarios
-const commentsData = [
+// Datos iniciales de comentarios (puedes cargarlos desde localStorage o un backend)
+let commentsData = [
     { username: "Usuario 1", rating: 5, text: "Excelente servicio, muy recomendado.", date: "2023-09-15" },
     { username: "Usuario 2", rating: 4, text: "Buena experiencia en general.", date: "2023-09-10" },
 ];
 
+// Función para crear elementos de estrellas
 function createStars(rating) {
     let starsHTML = '';
     for (let i = 1; i <= 5; i++) {
         if (i <= rating) {
-            starsHTML += '<span class="star">★</span>';
+            starsHTML += '<span class="star" data-rating="' + i + '">★</span>';
         } else {
-            starsHTML += '<span class="star" style="color: #ccc;">★</span>';
+            starsHTML += '<span class="star" data-rating="' + i + '" style="color: #ccc;">★</span>';
         }
     }
     return starsHTML;
 }
 
+// Función para renderizar comentarios
 function renderComments() {
     const container = document.getElementById('commentsContainer');
+    // Limpiar comentarios existentes
+    container.innerHTML = '';
+
+    // Renderizar cada comentario
     commentsData.forEach(comment => {
         const commentElement = document.createElement('div');
         commentElement.className = 'comment';
@@ -1090,7 +1096,7 @@ function renderComments() {
                 <div class="avatar">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-liejoin="round"/>
                     </svg>
                 </div>
                 <div class="username">${comment.username}</div>
@@ -1103,7 +1109,128 @@ function renderComments() {
     });
 }
 
-// Renderizar los comentarios al cargar la página
+// Función para mostrar el modal de agregar comentario
+function showAddCommentModal() {
+    // Crear el modal dinámicamente
+    const modalHTML = `
+        <div id="addCommentModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Agregar Comentario</h2>
+                <form id="addCommentForm">
+                    <div class="form-group">
+                        <label for="username">Nombre de usuario</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Calificación</label>
+                        <div id="ratingStars" class="rating-stars">
+                            ${createStars(0)}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="commentText">Comentario</label>
+                        <textarea id="commentText" name="commentText" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Enviar Comentario</button>
+                </form>
+            </div>
+        </div>
+    `;
+
+    // Insertar el modal en el DOM
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHTML;
+    document.body.appendChild(modalContainer.firstChild);
+
+    // Configurar interactividad de estrellas
+    const ratingStars = document.querySelectorAll('#ratingStars .star');
+    let selectedRating = 0;
+
+    ratingStars.forEach(star => {
+        star.addEventListener('mouseover', () => {
+            const rating = parseInt(star.dataset.rating);
+            ratingStars.forEach((s, index) => {
+                if (index < rating) {
+                    s.style.color = 'gold';
+                } else {
+                    s.style.color = '#ccc';
+                }
+            });
+        });
+
+        star.addEventListener('mouseout', () => {
+            ratingStars.forEach((s, index) => {
+                if (index < selectedRating) {
+                    s.style.color = 'gold';
+                } else {
+                    s.style.color = '#ccc';
+                }
+            });
+        });
+
+        star.addEventListener('click', () => {
+            selectedRating = parseInt(star.dataset.rating);
+            ratingStars.forEach((s, index) => {
+                if (index < selectedRating) {
+                    s.style.color = 'gold';
+                } else {
+                    s.style.color = '#ccc';
+                }
+            });
+        });
+    });
+
+    // Configurar evento de envío de formulario
+    const form = document.getElementById('addCommentForm');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Obtener valores del formulario
+        const username = document.getElementById('username').value;
+        const commentText = document.getElementById('commentText').value;
+
+        // Validar que se haya seleccionado una calificación
+        if (selectedRating === 0) {
+            alert('Por favor, selecciona una calificación');
+            return;
+        }
+
+        // Crear nuevo comentario
+        const newComment = {
+            username: username,
+            rating: selectedRating,
+            text: commentText,
+            date: new Date().toISOString().split('T')[0]
+        };
+
+        // Agregar comentario a los datos
+        commentsData.push(newComment);
+
+        // Renderizar comentarios actualizados
+        renderComments();
+
+        // Cerrar modal
+        closeAddCommentModal();
+    });
+
+    // Configurar botón de cierre
+    const closeButton = document.querySelector('.close-modal');
+    closeButton.addEventListener('click', closeAddCommentModal);
+}
+
+// Función para cerrar el modal de agregar comentario
+function closeAddCommentModal() {
+    const modal = document.getElementById('addCommentModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Evento para abrir el modal de agregar comentario
+document.getElementById('btn_agregar-comentario').addEventListener('click', showAddCommentModal);
+
+// Renderizar comentarios al cargar la página
 renderComments();
 
 

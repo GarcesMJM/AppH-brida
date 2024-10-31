@@ -1,64 +1,108 @@
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    overflow: hidden;
-}
-.header {
-    background-color: #f8f8f8;
-    padding: 15px;
+/* Estilos para la sección de comentarios */
+#commentsContainer {
     display: flex;
-    align-items: center;
-}
-.back-button {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    margin-right: 15px;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px 0;
 }
 
-.comments {
-    padding: 20px;
-}
 .comment {
     background-color: #f9f9f9;
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 15px;
-    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
 .user-info {
     display: flex;
     align-items: center;
+    gap: 10px;
     margin-bottom: 10px;
 }
-.avatar {
+
+.avatar svg {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
-    background-color: #ddd;
+}
+
+.stars {
+    color: gold;
+    margin-bottom: 10px;
+}
+
+.comment-text {
+    margin-bottom: 10px;
+}
+
+.comment-date {
+    color: #888;
+    font-size: 0.8em;
+    text-align: right;
+}
+
+/* Estilos para el modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 10px;
+    z-index: 1000;
 }
-.username {
-    font-weight: bold;
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
 }
-.stars {
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.rating-stars {
     display: flex;
-    margin-bottom: 5px;
+    gap: 5px;
+    cursor: pointer;
 }
-.star {
-    color: #ffd700;
-    font-size: 18px;
+
+.rating-stars .star {
+    font-size: 24px;
 }
-.comment-text {
-    margin-bottom: 5px;
-}
-.comment-date {
-    font-size: 12px;
-    color: #888;
+
+.submit-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
 }
